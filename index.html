@@ -367,6 +367,32 @@ async function postWebhook(payload) {
   }
   throw derniereErreur || new Error('injoignable');
 }
+
+// Pre-controle CV/offre : appele des le clic sur "Envoyer pour analyse",
+// AVANT toute redirection vers le paiement Chariow. Meme logique de
+// bascule court/long que postWebhook ci-dessus.
+const PRECHECK_URLS = [
+  "https://davy77.app.n8n.cloud/webhook/upwork-precheck",
+  "https://davy77.app.n8n.cloud/webhook/7ca3dd10-fe5b-4da4-9f81-29a9c5dae281/upwork-precheck"
+];
+
+async function postPrecheck(payload) {
+  let derniereErreur = null;
+  for (let i = 0; i < PRECHECK_URLS.length; i++) {
+    try {
+      const res = await fetch(PRECHECK_URLS[i], {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+      if (res.status === 404) { derniereErreur = new Error('404'); continue; }
+      return res;
+    } catch (e) {
+      derniereErreur = e;
+    }
+  }
+  throw derniereErreur || new Error('injoignable');
+}
 const CHARIOW_LINKS = {
   tache: "https://ymkecnxg.mychariow.com/prd_35s5kk1w",
   abonnement: "https://ymkecnxg.mychariow.com/prd_gqsgg9nk"
@@ -443,6 +469,7 @@ const translations = {
     statusNotPdf: "Le CV doit être un fichier PDF.",
     statusTooBig: "Le CV dépasse 8 Mo. Merci de fournir une version allégée.",
     statusSending: "Analyse en cours (elle peut prendre jusqu'à une minute) — ne ferme pas cette page.",
+    statusChecking: "Vérification du CV et de l'offre avant paiement…",
     statusNetworkErr: "Impossible de joindre le service d'analyse. Vérifie ta connexion et réessaie.",
     statusServerErr: "Le service d'analyse a rencontré une erreur. Réessaie dans quelques minutes.",
     planTacheLabel: "À la tâche — 3 000 FCFA",
@@ -512,6 +539,7 @@ const translations = {
     statusNotPdf: "The CV must be a PDF file.",
     statusTooBig: "The CV exceeds 8 MB. Please provide a lighter version.",
     statusSending: "Analyzing (this can take up to a minute) — don't close this page.",
+    statusChecking: "Checking your CV and job posting before payment…",
     statusNetworkErr: "Could not reach the analysis service. Check your connection and try again.",
     statusServerErr: "The analysis service hit an error. Please try again in a few minutes.",
     planTacheLabel: "Per task — $5",
@@ -1020,6 +1048,36 @@ if (!paidPlanFromUrl || sameTabResume) {
       return;
     }
     setBusy(false);
+
+    // ------------------------------------------------------------------
+    // PRE-CONTROLE : verifie que le CV joint et le texte de l'offre sont
+    // exploitables AVANT de proposer le paiement. Objectif : ne jamais
+    // faire payer un client pour une soumission qui echouerait de toute
+    // facon (mauvais fichier joint, offre vide ou incoherente).
+    // ------------------------------------------------------------------
+    setBusy(true);
+    showStatus('pending', t().statusChecking, true);
+    let verif;
+    try {
+      const verifRes = await postPrecheck({
+        cv_base64: pendingRequest.cv_base64,
+        job_text: pendingRequest.job_text,
+        ui_lang: pendingRequest.ui_lang
+      });
+      verif = await verifRes.json();
+    } catch (err) {
+      setBusy(false);
+      showStatus('err', t().statusNetworkErr);
+      return;
+    }
+    setBusy(false);
+
+    if (verif && verif.valide === false) {
+      pendingRequest = null;
+      showStatus('err', verif.message || t().statusServerErr);
+      return;
+    }
+    showStatus('', '');
 
     // Sauvegarde de secours : si le paiement se fait dans le MEME onglet,
     // la page est rechargee et la demande serait perdue sans cela.
