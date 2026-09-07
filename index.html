@@ -189,6 +189,9 @@
   .sample-letter{background:#fff;border:1px solid var(--accent);border-left:4px solid var(--accent);
     border-radius:8px;padding:14px;white-space:pre-wrap;font-size:13px;line-height:1.7;}
   .sample-cta{margin-top:16px;font-size:13.5px;color:var(--navy);font-weight:600;}
+  .launch-note{background:rgba(27,122,61,.08);border:1px solid rgba(27,122,61,.35);border-radius:10px;
+    padding:12px 14px;margin:0 0 22px;font-size:13.5px;line-height:1.6;color:#14202E;}
+  .launch-note b{color:#1B7A3D;}
   footer.foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px;}
 </style>
 </head>
@@ -211,14 +214,15 @@
       <span class="line"></span>
       <span class="step" id="stepper-2" data-i18n="step2">02 — Profil et offre</span>
       <span class="line"></span>
-      <span class="step" id="stepper-3" data-i18n="step3">03 — Paiement et résultat</span>
+      <span class="step" id="stepper-3" data-i18n="step3">03 — Analyse et résultat</span>
     </div>
 
     <!-- ETAPE 1 : choix de la formule -->
     <section id="step-plans">
       <span class="eyebrow" data-i18n="eyebrow">● Réservé aux profils data / BI / analytics</span>
       <h1 data-i18n="h1">On regarde l'offre avant que tu ne postules.</h1>
-      <p class="sub" data-i18n="sub">Choisis ta formule. Tu ne paies qu'au téléchargement, une fois ton analyse prête.</p>
+      <p class="sub" data-i18n="sub">Dépose ton CV et le texte de l'offre : tu reçois l'analyse complète en moins de deux minutes.</p>
+      <div class="launch-note" data-i18n="launchNote"><b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.</div>
 
       <div class="plans">
         <div class="plan-card">
@@ -226,14 +230,14 @@
           <h3 data-i18n="planTaskTitle">Analyse ponctuelle</h3>
           <p class="price" data-i18n="planTaskPrice">3 000 FCFA</p>
           <p class="desc" data-i18n="planTaskDesc">Une offre analysée : double score, signaux d'alerte, stratégie de contrat avec jalons, et lettre de motivation prête à envoyer.</p>
-          <button type="button" class="btn" data-plan="tache" data-i18n="planChooseBtn">Choisir cette formule</button>
+          <button type="button" class="btn" data-plan="tache" data-i18n="planChooseBtn">Analyser une offre →</button>
         </div>
         <div class="plan-card">
           <span class="ptag" data-i18n="planSubTag">Accès 30 jours</span>
           <h3 data-i18n="planSubTitle">Analyses illimitées</h3>
           <p class="price" data-i18n="planSubPrice">5 000 FCFA</p>
           <p class="desc" data-i18n="planSubDesc">Analysez autant d'offres que vous voulez pendant 30 jours. Paiement unique, sans reconduction automatique.</p>
-          <button type="button" class="btn" data-plan="abonnement" data-i18n="planChooseBtn">Choisir cette formule</button>
+          <button type="button" class="btn" data-plan="abonnement" data-i18n="planChooseBtn">Analyser une offre →</button>
         </div>
       </div>
 
@@ -265,7 +269,7 @@
 
           <div>
             <label for="contact_email" data-i18n="labelEmail">Adresse email <span class="req">*</span></label>
-            <p class="field-hint email-warn" data-i18n="emailWarn">Important : utilise sur Chariow la MÊME adresse email que celle saisie ci-dessus. C'est elle qui nous sert à retrouver ton paiement.</p>
+            <p class="field-hint" data-i18n="emailWarn">Votre rapport vous est aussi envoyé à cette adresse : vous ne le perdez pas si vous fermez l'onglet.</p>
             <input type="email" id="contact_email" name="contact_email" required placeholder="vous@exemple.com" autocomplete="email">
           </div>
 
@@ -290,6 +294,19 @@
             <input type="url" id="job_url" name="job_url" placeholder="https://www.upwork.com/jobs/...">
           </div>
           <div>
+            <label for="job_proposals" data-i18n="labelProposals">Nombre de propositions déjà envoyées (optionnel)</label>
+            <p class="field-hint" data-i18n="proposalsHint">Ces trois informations sont visibles sur la page de l'offre. Elles rendent le score « chances réelles » nettement plus fiable.</p>
+            <input type="text" id="job_proposals" name="job_proposals" maxlength="60" placeholder="ex. 10 à 15">
+          </div>
+          <div>
+            <label for="job_avg_bid" data-i18n="labelAvgBid">Enchère moyenne des concurrents (optionnel)</label>
+            <input type="text" id="job_avg_bid" name="job_avg_bid" maxlength="60" placeholder="ex. 28,27 $/h">
+          </div>
+          <div>
+            <label for="job_client_info" data-i18n="labelClientInfo">Historique du client (optionnel)</label>
+            <input type="text" id="job_client_info" name="job_client_info" maxlength="300" placeholder="ex. paiement vérifié, 4,9/5, 32 missions">
+          </div>
+          <div>
             <label for="job_text" data-i18n="labelJobText">Texte complet de l'offre <span class="req">*</span></label>
             <p class="field-hint" data-i18n="jobTextHint">Description, budget, compétences demandées, infos client si visibles.</p>
             <textarea id="job_text" name="job_text" required maxlength="20000"></textarea>
@@ -303,19 +320,15 @@
       </form>
     </section>
 
-    <!-- ETAPE 3 : résultat + téléchargement conditionné au paiement -->
+    <!-- ETAPE 3 : analyse en cours puis resultat -->
     <section id="step-result" style="display:none;">
       <div class="result-box">
         <p class="file-title" id="result-title"></p>
         <p class="file-meta" id="result-meta" data-i18n="resultMeta">Format : HTML, dans la langue de cette page</p>
-        <button type="button" class="btn btn-primary" id="reveal-payment-btn" data-i18n="revealPaymentBtn">Télécharger mes résultats →</button>
+        <button type="button" class="btn btn-primary" id="reveal-payment-btn" style="display:none;" data-i18n="downloadAgainBtn">Télécharger à nouveau →</button>
 
-        <div class="payment-area" id="payment-area">
-          <p class="sub" style="margin:0 0 14px;" data-i18n="payToDownload">Le règlement se fait sur Chariow, dans un nouvel onglet. Une fois payé, tu es redirigé automatiquement et le téléchargement démarre ici tout seul.</p>
-          <a class="btn" id="chariow-pay-link" href="#" target="_blank" rel="noopener" data-i18n="payNowBtn">Payer sur Chariow →</a>
+        <div class="payment-area show" id="payment-area">
           <div id="waiting-note" class="result-note pending" role="status" aria-live="polite"></div>
-          <br>
-          <button type="button" class="btn btn-primary" id="confirm-paid-btn" style="display:none;" data-i18n="confirmPaidBtn">J'ai payé sur Chariow — lancer mon analyse →</button>
 
           <div class="progress-wrap" id="progress-wrap">
             <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
@@ -329,6 +342,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
 
@@ -393,15 +407,12 @@ async function postPrecheck(payload) {
   }
   throw derniereErreur || new Error('injoignable');
 }
-const CHARIOW_LINKS = {
-  tache: "https://ymkecnxg.mychariow.com/prd_35s5kk1w",
-  abonnement: "https://ymkecnxg.mychariow.com/prd_gqsgg9nk"
-};
 // Limite volontairement basse : le PDF est encode en base64 (+33% de volume)
-// et transite dans le corps de la requete. 8 Mo couvre tout CV normal.
-const MAX_CV_BYTES = 8 * 1024 * 1024;
+// et transite dans le corps de la requete. Alignee sur le plafond du
+// serveur, qui refuse au-dela d'environ 4 Mo : sans cela, le client
+// passait le controle ici pour se faire refuser juste apres.
+const MAX_CV_BYTES = 4 * 1024 * 1024;
 
-const LS_PAID_PREFIX = 'chariow_paid_';
 const LS_PENDING_REQUEST = 'upwork_pending_request';
 
 /* ===================================================================
@@ -467,7 +478,7 @@ const translations = {
     errShortJobText: "Le texte de l'offre est trop court pour être analysé sérieusement (au moins 100 caractères).",
     statusMissingCv: "Merci de charger votre CV au format PDF.",
     statusNotPdf: "Le CV doit être un fichier PDF.",
-    statusTooBig: "Le CV dépasse 8 Mo. Merci de fournir une version allégée.",
+    statusTooBig: "Le CV dépasse 4 Mo. Merci de fournir une version allégée.",
     statusSending: "Analyse en cours (elle peut prendre jusqu'à une minute) — ne ferme pas cette page.",
     statusChecking: "Vérification du CV et de l'offre avant paiement…",
     statusNetworkErr: "Impossible de joindre le service d'analyse. Vérifie ta connexion et réessaie.",
@@ -537,7 +548,7 @@ const translations = {
     errShortJobText: "The job text is too short for a serious analysis (at least 100 characters).",
     statusMissingCv: "Please upload your CV as a PDF.",
     statusNotPdf: "The CV must be a PDF file.",
-    statusTooBig: "The CV exceeds 8 MB. Please provide a lighter version.",
+    statusTooBig: "The CV exceeds 4 MB. Please provide a lighter version.",
     statusSending: "Analyzing (this can take up to a minute) — don't close this page.",
     statusChecking: "Checking your CV and job posting before payment…",
     statusNetworkErr: "Could not reach the analysis service. Check your connection and try again.",
@@ -553,6 +564,62 @@ const translations = {
 // Langue par defaut : anglais (marche Upwork majoritairement anglophone).
 // Le visiteur peut basculer en francais avec le selecteur en haut de page.
 let currentLang = 'en';
+/* ===================================================================
+   PHASE DE LANCEMENT
+   Le paiement a ete retire du parcours le 07/09/2026. Ces libelles
+   remplacent ceux du parcours payant ; les cles devenues inutilisees
+   restent en place au cas ou le paiement reviendrait.
+   =================================================================== */
+const MAJ_LANCEMENT = {
+  fr: {
+    step3: "03 — Analyse et résultat",
+    sub: "Dépose ton CV et le texte de l'offre : tu reçois l'analyse complète en moins de deux minutes.",
+    launchNote: "<b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.",
+    planChooseBtn: "Analyser une offre →",
+    planTacheLabel: "Analyse ponctuelle — offerte pendant le lancement",
+    planAbonnementLabel: "Analyses illimitées — offertes pendant le lancement",
+    emailWarn: "Votre rapport vous est aussi envoyé à cette adresse : vous ne le perdez pas si vous fermez l'onglet.",
+    labelProposals: "Nombre de propositions déjà envoyées (optionnel)",
+    proposalsHint: "Ces trois informations sont visibles sur la page de l'offre. Elles rendent le score « chances réelles » nettement plus fiable.",
+    labelAvgBid: "Enchère moyenne des concurrents (optionnel)",
+    labelClientInfo: "Historique du client (optionnel)",
+    prg1: "Contrôle de recevabilité",
+    prg2: "Lecture du CV et de l'offre",
+    statusChecking: "Vérification du CV et de l'offre…",
+    runningTitle: "Analyse en cours",
+    readyMeta: "Livré en HTML, dans la langue de cette page",
+    downloadAgainBtn: "Télécharger à nouveau →",
+    retryAnalysis: "Relancer l'analyse",
+    emailedNote: "Une copie du rapport vient aussi de partir vers votre adresse email.",
+    lostRequest: "Votre demande n'a pas pu être retrouvée. Reprenez le formulaire depuis le début."
+  },
+  en: {
+    step3: "03 — Analysis and result",
+    sub: "Drop your CV and the job text: you get the full analysis in under two minutes.",
+    launchNote: "<b>Launch phase:</b> analyses are free, up to 3 per day per email address. The prices below will apply once payments open.",
+    planChooseBtn: "Analyze a job →",
+    planTacheLabel: "One-time analysis — free during launch",
+    planAbonnementLabel: "Unlimited analyses — free during launch",
+    emailWarn: "Your report is also sent to this address, so you keep it even if you close the tab.",
+    labelProposals: "Proposals already sent (optional)",
+    proposalsHint: "All three are shown on the job page. They make the \u201creal odds\u201d score far more reliable.",
+    labelAvgBid: "Competitors' average bid (optional)",
+    labelClientInfo: "Client history (optional)",
+    prg1: "Eligibility check",
+    prg2: "Reading CV and job posting",
+    statusChecking: "Checking your CV and the job posting\u2026",
+    runningTitle: "Analysis in progress",
+    readyMeta: "Delivered as HTML, in this page's language",
+    downloadAgainBtn: "Download again →",
+    retryAnalysis: "Run the analysis again",
+    emailedNote: "A copy of the report has also been sent to your email address.",
+    lostRequest: "Your request could not be found. Please start the form again."
+  }
+};
+Object.keys(MAJ_LANCEMENT).forEach(function (l) {
+  Object.assign(translations[l], MAJ_LANCEMENT[l]);
+});
+
 function t() { return translations[currentLang]; }
 
 /* ===================================================================
@@ -755,47 +822,11 @@ function renderSample() {
 
 
 /* ===================================================================
-   RETOUR DE PAIEMENT CHARIOW
-   URL de redirection a configurer sur Chariow, par produit :
-     A la tache  -> https://trebi7.github.io/Upwork-Profile-Analyzer/?paid=tache
-     Abonnement  -> https://trebi7.github.io/Upwork-Profile-Analyzer/?paid=abonnement
-
-   Deux cas sont couverts :
-   1. Paiement dans un NOUVEL onglet -> on depose un signal en localStorage,
-      l'onglet d'origine le detecte et lance le telechargement.
-   2. Paiement dans le MEME onglet (popup bloquee par le navigateur) -> le
-      rapport a ete sauvegarde avant la redirection, on le restaure et on
-      telecharge directement. Sans cela, le client perdait son analyse.
-   =================================================================== */
-let sameTabResume = null;
-
-const paidPlanFromUrl = (function () {
-  const p = new URLSearchParams(window.location.search).get('paid');
-  return (p === 'tache' || p === 'abonnement') ? p : null;
-})();
-
-function renderPaidPage(message) {
-  const html =
-    '<div style="max-width:520px;margin:80px auto;text-align:center;font-family:Inter,system-ui,sans-serif;padding:0 20px;">' +
-    '<h1 style="font-family:\'Space Grotesk\',sans-serif;color:#1B7A3D;font-size:26px;">✅ ' + t().paidPageTitle + '</h1>' +
-    '<p style="color:#5B6B7C;font-size:15px;line-height:1.6;">' + message + '</p>' +
-    '</div>';
-  // Le script est en fin de body : DOMContentLoaded a souvent DEJA ete emis.
-  // Attendre l'evenement laissait la page blanche. On teste donc readyState.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { document.body.innerHTML = html; });
-  } else {
-    document.body.innerHTML = html;
-  }
-}
-
-/* ===================================================================
    ETAT
    =================================================================== */
 let selectedPlan = null;
-let reportData = null;      // rapport recu APRES paiement verifie
-let pendingRequest = null;  // demande en attente de paiement (jamais envoyee avant)
-let paymentPollInterval = null;
+let reportData = null;      // rapport recu du serveur
+let pendingRequest = null;  // demande en cours d'envoi
 let selectedFileName = null;
 let analyseEnCours = false;  // verrou : empeche plusieurs analyses simultanees
 
@@ -884,30 +915,9 @@ function afficherListeFichiers(prets) {
 }
 
 /* ===================================================================
-   CAS 2 : retour de paiement dans le MEME onglet
+   INTERFACE
    =================================================================== */
-if (paidPlanFromUrl) {
-  try { localStorage.setItem(LS_PAID_PREFIX + paidPlanFromUrl, Date.now().toString()); } catch (e) {}
-
-  // Cas "meme onglet" : la page a ete rechargee par la redirection Chariow.
-  // On restaure la demande sauvegardee et on lance l'analyse ici meme.
-  let restored = null;
-  try {
-    const saved = localStorage.getItem(LS_PENDING_REQUEST);
-    if (saved) restored = JSON.parse(saved);
-  } catch (e) {}
-
-  if (restored && restored.cv_base64) {
-    sameTabResume = restored;
-  } else {
-    renderPaidPage(t().paidPageBody);
-  }
-}
-
-/* ===================================================================
-   INTERFACE (uniquement si on n'est pas sur la page de confirmation)
-   =================================================================== */
-if (!paidPlanFromUrl || sameTabResume) {
+{
 
   const form = document.getElementById('screening-form');
   const fileInput = document.getElementById('cv_file');
@@ -953,10 +963,6 @@ if (!paidPlanFromUrl || sameTabResume) {
     document.getElementById('step-form').style.display = name === 'form' ? '' : 'none';
     document.getElementById('step-result').style.display = name === 'result' ? '' : 'none';
     setStepper(name === 'plans' ? 1 : name === 'form' ? 2 : 3);
-    if (name !== 'result' && paymentPollInterval) {
-      clearInterval(paymentPollInterval);
-      paymentPollInterval = null;
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -1006,9 +1012,9 @@ if (!paidPlanFromUrl || sameTabResume) {
   }
 
   // ------------------------------------------------------------------
-  // SOUMISSION : aucune analyse n'est lancee ici. On memorise la demande
-  // et on passe a l'ecran de deblocage. L'analyse ne partira qu'apres
-  // verification du paiement cote serveur.
+  // SOUMISSION : pre-controle du CV et de l'offre, puis analyse complete
+  // dans la foulee. Le paiement a ete retire du parcours : le serveur
+  // applique un plafond d'usage a la place.
   // ------------------------------------------------------------------
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -1040,7 +1046,10 @@ if (!paidPlanFromUrl || sameTabResume) {
         cv_base64: cv_base64,
         job_title: jobTitle,
         job_url: document.getElementById('job_url').value.trim(),
-        job_text: jobText
+        job_text: jobText,
+        job_proposals: document.getElementById('job_proposals').value.trim(),
+        job_avg_bid: document.getElementById('job_avg_bid').value.trim(),
+        job_client_info: document.getElementById('job_client_info').value.trim()
       };
     } catch (err) {
       setBusy(false);
@@ -1051,9 +1060,9 @@ if (!paidPlanFromUrl || sameTabResume) {
 
     // ------------------------------------------------------------------
     // PRE-CONTROLE : verifie que le CV joint et le texte de l'offre sont
-    // exploitables AVANT de proposer le paiement. Objectif : ne jamais
-    // faire payer un client pour une soumission qui echouerait de toute
-    // facon (mauvais fichier joint, offre vide ou incoherente).
+    // exploitables AVANT de lancer l'analyse complete. Objectif : ne pas
+    // consommer une analyse du quota pour une soumission qui echouerait
+    // de toute facon (mauvais fichier joint, offre vide ou incoherente).
     // ------------------------------------------------------------------
     setBusy(true);
     showStatus('pending', t().statusChecking, true);
@@ -1079,36 +1088,23 @@ if (!paidPlanFromUrl || sameTabResume) {
     }
     showStatus('', '');
 
-    // Sauvegarde de secours : si le paiement se fait dans le MEME onglet,
-    // la page est rechargee et la demande serait perdue sans cela.
-    try {
-      localStorage.setItem(LS_PENDING_REQUEST, JSON.stringify(pendingRequest));
-    } catch (e) {
-      // Quota depasse (CV volumineux) : on continue, la demande reste en
-      // memoire tant que cet onglet reste ouvert.
-    }
-
     statusBox.className = 'result-note';
     reportData = null;
-    document.getElementById('result-title').textContent = t().readyTitle + ' — ' + jobTitle;
+    document.getElementById('result-title').textContent = t().runningTitle + ' — ' + jobTitle;
     document.getElementById('result-meta').textContent = t().readyMeta;
-    document.getElementById('payment-area').classList.remove('show');
-    document.getElementById('reveal-payment-btn').style.display = '';
-    // Tant que le paiement n'est pas revenu, le bouton de lancement reste cache.
-    document.getElementById('confirm-paid-btn').style.display = 'none';
+    document.getElementById('reveal-payment-btn').style.display = 'none';
     document.getElementById('files-list').classList.remove('show');
     showStep('result');
+    lancerAnalyse();
   });
 
   // ------------------------------------------------------------------
-  // APRES PAIEMENT : envoi de la demande. Le serveur verifie la vente
-  // aupres de Chariow avant de lancer la moindre analyse.
+  // ANALYSE COMPLETE. Le serveur controle la recevabilite et le quota
+  // avant d'appeler le modele.
   // ------------------------------------------------------------------
   async function lancerAnalyse() {
-    // Un seul clic peut declencher plusieurs appels (bouton reessayer +
-    // sondage du signal de paiement). Sans ce verrou, plusieurs analyses
-    // partaient en parallele : autant de credits consommes et d'appels
-    // API factures pour une seule demande.
+    // Verrou : sans lui, un double clic sur le bouton de relance envoyait
+    // deux analyses en parallele, donc deux appels API pour une demande.
     if (analyseEnCours) return;
     if (!pendingRequest) {
       waitingNote.className = 'result-note show err';
@@ -1117,11 +1113,9 @@ if (!paidPlanFromUrl || sameTabResume) {
     }
 
     analyseEnCours = true;
-    if (paymentPollInterval) { clearInterval(paymentPollInterval); paymentPollInterval = null; }
     waitingNote.className = 'result-note show pending';
     waitingNote.textContent = t().prgLong;
     document.getElementById('reveal-payment-btn').style.display = 'none';
-    document.getElementById('confirm-paid-btn').classList.add('btn-disabled');
     prgDemarrer();
 
     let res;
@@ -1130,7 +1124,6 @@ if (!paidPlanFromUrl || sameTabResume) {
     } catch (err) {
       analyseEnCours = false;
       prgArreter();
-      document.getElementById('confirm-paid-btn').classList.remove('btn-disabled');
       waitingNote.className = 'result-note show err';
       waitingNote.textContent = t().statusNetworkErr;
       afficherBoutonReessayer();
@@ -1143,7 +1136,6 @@ if (!paidPlanFromUrl || sameTabResume) {
     if (!res.ok || data.success === false || !data.report_html) {
       analyseEnCours = false;
       prgArreter();
-      document.getElementById('confirm-paid-btn').classList.remove('btn-disabled');
       waitingNote.className = 'result-note show err';
       waitingNote.textContent = data.message || t().statusServerErr;
       afficherBoutonReessayer();
@@ -1177,15 +1169,16 @@ if (!paidPlanFromUrl || sameTabResume) {
     };
 
     document.getElementById('result-title').textContent = t().resultTitlePrefix + reportData.job_title;
-    try { localStorage.removeItem(LS_PENDING_REQUEST); } catch (e) {}
-
-    const restants = (typeof data.jours_restants === 'number')
-      ? ' ' + data.jours_restants + t().subDaysLeft : '';
 
     triggerDownloads(function (ok) {
       prgTerminer();
+      // Le bouton reapparait pour un second telechargement : les navigateurs
+      // bloquent parfois le premier sans le signaler.
+      const btn = document.getElementById('reveal-payment-btn');
+      btn.style.display = '';
+      btn.textContent = t().downloadAgainBtn;
       waitingNote.className = 'result-note show ' + (ok ? 'ok' : 'err');
-      waitingNote.textContent = (ok ? t().downloadDone : t().statusServerErr) + restants;
+      waitingNote.textContent = (ok ? t().downloadDone : t().statusServerErr) + ' ' + t().emailedNote;
     });
   }
 
@@ -1196,7 +1189,7 @@ if (!paidPlanFromUrl || sameTabResume) {
     const btn = ancien.cloneNode(true);
     ancien.parentNode.replaceChild(btn, ancien);
     btn.style.display = '';
-    btn.textContent = t().retryPayment;
+    btn.textContent = t().retryAnalysis;
     btn.addEventListener('click', function () { lancerAnalyse(); });
   }
 
@@ -1265,81 +1258,18 @@ if (!paidPlanFromUrl || sameTabResume) {
   }
 
   /* ==================================================================
-     ETAT DU PAIEMENT : boutons
+     TELECHARGEMENT
      ================================================================== */
-  function activerApresPaiement() {
-    const payLink = document.getElementById('chariow-pay-link');
-    payLink.classList.add('btn-disabled');
-    payLink.setAttribute('aria-disabled', 'true');
-    payLink.textContent = '\u2713 ' + t().payDone;
-    const btn = document.getElementById('confirm-paid-btn');
-    btn.style.display = '';
-    btn.disabled = false;
-  }
-
-  /* --- Paiement / telechargement --- */
   const waitingNote = document.getElementById('waiting-note');
 
-  function checkPaymentSignal() {
-    if (!selectedPlan) return;
-    const key = LS_PAID_PREFIX + selectedPlan;
-    let signal = null;
-    try { signal = localStorage.getItem(key); } catch (e) { return; }
-    if (!signal) return;
-
-    try { localStorage.removeItem(key); } catch (e) {}
-    if (paymentPollInterval) { clearInterval(paymentPollInterval); paymentPollInterval = null; }
-    // Le paiement est revenu : on grise le bouton de paiement et on active
-    // le lancement, que le client declenche lui-meme.
-    activerApresPaiement();
-    waitingNote.className = 'result-note show ok';
-    waitingNote.textContent = t().payDone;
-  }
-
-  window.addEventListener('storage', function (e) {
-    if (e.key === LS_PAID_PREFIX + selectedPlan) checkPaymentSignal();
-  });
-
+  // Le rapport est deja en memoire : ce bouton ne relance aucune analyse,
+  // il reconstruit le fichier. Utile quand le navigateur bloque le premier
+  // telechargement automatique.
   document.getElementById('reveal-payment-btn').addEventListener('click', function () {
-    document.getElementById('chariow-pay-link').href = CHARIOW_LINKS[selectedPlan] || CHARIOW_LINKS.tache;
-    document.getElementById('payment-area').classList.add('show');
-    waitingNote.className = 'result-note show pending';
-    waitingNote.textContent = t().payFirst;
-
-    // La redirection automatique Chariow reste geree ici si jamais elle
-    // redevient disponible (Chariow empeche actuellement d'activer a la
-    // fois l'URL de redirection ET le message de livraison, qui est
-    // obligatoire pour publier). Ce sondage ne se declenchera donc pas en
-    // pratique : c'est le bouton ci-dessous qui fait tout le travail.
-    checkPaymentSignal();
-    if (paymentPollInterval) clearInterval(paymentPollInterval);
-    paymentPollInterval = setInterval(checkPaymentSignal, 1500);
-  });
-
-  // Action principale : le client clique ici en revenant de Chariow.
-  // Aucun risque a se fier a un simple clic : c'est le serveur qui
-  // controle reellement le paiement auprès de Chariow avant d'analyser.
-  document.getElementById('confirm-paid-btn').addEventListener('click', function () {
     if (analyseEnCours) return;
     if (reportData) { triggerDownloads(function () { prgTerminer(); }); return; }
     lancerAnalyse();
   });
-
-  // Reprise apres un paiement effectue dans le MEME onglet
-  if (sameTabResume) {
-    pendingRequest = sameTabResume;
-    selectedPlan = sameTabResume.plan || paidPlanFromUrl;
-    updatePlanRecap();
-    document.getElementById('result-title').textContent =
-      t().readyTitle + ' — ' + (sameTabResume.job_title || '');
-    document.getElementById('result-meta').textContent = t().readyMeta;
-    document.getElementById('payment-area').classList.add('show');
-    document.getElementById('chariow-pay-link').href = CHARIOW_LINKS[selectedPlan] || CHARIOW_LINKS.tache;
-    showStep('result');
-    activerApresPaiement();
-    waitingNote.className = 'result-note show ok';
-    waitingNote.textContent = t().payDone;
-  }
 
   applyLanguage(currentLang);
 }
