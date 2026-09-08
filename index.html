@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Upwork Job Screening — Data / BI / Analytics</title>
+<title>Analyse d'offres — Data / BI / Analytics</title>
 <meta name="description" content="Get an Upwork job assessed before spending your connects: compatibility score, red flags, contract strategy and a ready-to-paste cover letter, based on your CV.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,6 +76,10 @@
   .qgrid .field-hint{font-size:12.5px;color:var(--muted);margin:-3px 0 7px;font-weight:400;}
   .qgrid .email-warn{background:rgba(181,89,11,.07);border-left:3px solid var(--amber);color:var(--amber);
     padding:8px 10px;border-radius:0 6px 6px 0;margin:0 0 8px;}
+  .qgrid select{
+    width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);
+    font-size:14.5px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
+  }
   .qgrid input[type=text], .qgrid input[type=url], .qgrid input[type=email], .qgrid textarea{
     width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);
     font-size:14.5px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
@@ -189,6 +193,25 @@
   .sample-letter{background:#fff;border:1px solid var(--accent);border-left:4px solid var(--accent);
     border-radius:8px;padding:14px;white-space:pre-wrap;font-size:13px;line-height:1.7;}
   .sample-cta{margin-top:16px;font-size:13.5px;color:var(--navy);font-weight:600;}
+  .type-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 26px;}
+  .type-card{text-align:left;background:#fff;border:1.5px solid #DCE5EF;border-radius:12px;
+    padding:14px 16px;cursor:pointer;font-family:inherit;transition:border-color .15s,background .15s;}
+  .type-card:hover{border-color:var(--accent);}
+  .type-card.active{border-color:var(--navy);background:#F2F7FD;}
+  .type-card b{display:block;font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14.5px;margin-bottom:3px;}
+  .type-card span{display:block;color:var(--muted);font-size:12.5px;line-height:1.45;}
+  @media(max-width:700px){.type-picker{grid-template-columns:1fr;}}
+  .tc-scam{background:rgba(168,50,42,.09);border:2px solid #A8322A;border-radius:10px;
+    padding:12px 14px;margin:0 0 12px;font-size:13.5px;line-height:1.55;color:var(--ink);}
+  .tc-scam b{color:#A8322A;display:block;margin-bottom:4px;}
+  .tc-warn{background:rgba(181,89,11,.09);border-left:4px solid var(--amber);border-radius:0 8px 8px 0;
+    padding:11px 13px;margin:0 0 12px;font-size:13px;line-height:1.55;color:var(--ink);}
+  .type-confirm{background:#F5F8FC;border:1px solid #E1E8F0;border-radius:12px;padding:18px 20px;margin:0 0 16px;text-align:left;}
+  .type-confirm .tc-title{font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:15px;font-weight:700;margin:0 0 4px;}
+  .type-confirm .tc-sub{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 14px;}
+  .type-confirm label{display:block;font-size:12.5px;font-weight:600;color:var(--navy);margin:0 0 6px;}
+  .type-confirm select{width:100%;padding:11px 12px;border:1px solid #CBD8E6;border-radius:9px;
+    font-size:14px;background:#fff;color:#14202E;margin:0 0 14px;font-family:inherit;}
   .launch-note{background:rgba(27,122,61,.08);border:1px solid rgba(27,122,61,.35);border-radius:10px;
     padding:12px 14px;margin:0 0 22px;font-size:13.5px;line-height:1.6;color:#14202E;}
   .launch-note b{color:#1B7A3D;}
@@ -198,9 +221,9 @@
 <body>
 <div class="page">
   <div class="top">
-    <span class="brand">Upwork <span class="x">×</span> Data/BI</span>
+    <span class="brand">Analyse d'offres <span class="x">×</span> Data/BI</span>
     <div class="top-right">
-      <small data-i18n="tagline">Zéro connect gaspillé</small>
+      <small data-i18n="tagline">Zéro candidature à l'aveugle</small>
       <div class="lang-switch">
         <button type="button" id="lang-fr">FR</button>
         <button type="button" id="lang-en" class="active">EN</button>
@@ -220,8 +243,8 @@
     <!-- ETAPE 1 : choix de la formule -->
     <section id="step-plans">
       <span class="eyebrow" data-i18n="eyebrow">● Réservé aux profils data / BI / analytics</span>
-      <h1 data-i18n="h1">On regarde l'offre avant que tu ne postules.</h1>
-      <p class="sub" data-i18n="sub">Dépose ton CV et le texte de l'offre : tu reçois l'analyse complète en moins de deux minutes.</p>
+      <h1 data-i18n="h1">On analyse l'offre avant que tu ne postules.</h1>
+      <p class="sub" data-i18n="sub">Mission freelance, poste salarié ou appel à consultance : dépose ton CV et le texte de l'offre, tu reçois l'analyse complète en moins de deux minutes.</p>
       <div class="launch-note" data-i18n="launchNote"><b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.</div>
 
       <div class="plans">
@@ -259,7 +282,24 @@
         <button type="button" class="change-plan-btn" id="change-plan-btn" data-i18n="changePlanBtn">Changer de formule</button>
       </div>
 
-      <form id="screening-form" novalidate>
+      <span class="qtag" data-i18n="typeTag">◆ De quel type d'offre s'agit-il ?</span>
+      <p class="sub" style="margin:-8px 0 18px;font-size:14px;" data-i18n="typeHint">Le formulaire et le rapport s'adaptent au type choisi. Le service vérifie ensuite ce choix à partir du texte de l'offre.</p>
+      <div class="type-picker" id="type-picker">
+        <button type="button" class="type-card" data-type="freelance">
+          <b data-i18n="typeFreelanceT">Mission freelance</b>
+          <span data-i18n="typeFreelanceD">Upwork, Malt, Fiverr, Freelancer…</span>
+        </button>
+        <button type="button" class="type-card" data-type="salarie">
+          <b data-i18n="typeSalarieT">Poste salarié</b>
+          <span data-i18n="typeSalarieD">CDI, CDD, entreprise, ONG, administration</span>
+        </button>
+        <button type="button" class="type-card" data-type="consultance">
+          <b data-i18n="typeConsultanceT">Appel à consultance</b>
+          <span data-i18n="typeConsultanceD">Termes de référence, bailleur, agence</span>
+        </button>
+      </div>
+
+      <form id="screening-form" novalidate style="display:none;">
         <span class="qtag" data-i18n="profileTag">◆ Votre profil</span>
         <div class="qgrid">
           <div>
@@ -283,32 +323,85 @@
           </div>
         </div>
 
-        <span class="qtag two" data-i18n="jobTag">◆ L'offre à analyser</span>
+        <span class="qtag two" id="job-tag">◆ L'offre à analyser</span>
         <div class="qgrid">
           <div>
-            <label for="job_title" data-i18n="labelJobTitle">Titre de l'offre <span class="req">*</span></label>
+            <label for="job_title" id="lbl-job-title">Titre de l'offre <span class="req">*</span></label>
             <input type="text" id="job_title" name="job_title" required maxlength="200">
           </div>
           <div>
-            <label for="job_url" data-i18n="labelJobUrl">Lien Upwork (optionnel)</label>
-            <input type="url" id="job_url" name="job_url" placeholder="https://www.upwork.com/jobs/...">
+            <label for="job_url" id="lbl-job-url">Lien de l'annonce (optionnel)</label>
+            <input type="url" id="job_url" name="job_url" placeholder="https://">
+          </div>
+        </div>
+
+        <div class="qgrid" data-type-block="freelance" style="display:none;">
+          <div>
+            <label for="ctx_fl_proposals" data-i18n="flProposals">Nombre de propositions déjà envoyées (optionnel)</label>
+            <p class="field-hint" data-i18n="flHint">Ces informations sont visibles sur la page de la mission. Elles rendent le score « chances réelles » nettement plus fiable.</p>
+            <input type="text" id="ctx_fl_proposals" maxlength="60" placeholder="ex. 10 à 15">
           </div>
           <div>
-            <label for="job_proposals" data-i18n="labelProposals">Nombre de propositions déjà envoyées (optionnel)</label>
-            <p class="field-hint" data-i18n="proposalsHint">Ces trois informations sont visibles sur la page de l'offre. Elles rendent le score « chances réelles » nettement plus fiable.</p>
-            <input type="text" id="job_proposals" name="job_proposals" maxlength="60" placeholder="ex. 10 à 15">
+            <label for="ctx_fl_avgbid" data-i18n="flAvgBid">Enchère moyenne des concurrents (optionnel)</label>
+            <input type="text" id="ctx_fl_avgbid" maxlength="60" placeholder="ex. 28,27 $/h">
           </div>
           <div>
-            <label for="job_avg_bid" data-i18n="labelAvgBid">Enchère moyenne des concurrents (optionnel)</label>
-            <input type="text" id="job_avg_bid" name="job_avg_bid" maxlength="60" placeholder="ex. 28,27 $/h">
+            <label for="ctx_fl_client" data-i18n="flClient">Historique du client : paiement vérifié, note, missions (optionnel)</label>
+            <input type="text" id="ctx_fl_client" maxlength="300" placeholder="ex. paiement vérifié, 4,9/5, 32 missions">
+          </div>
+        </div>
+
+        <div class="qgrid" data-type-block="salarie" style="display:none;">
+          <div>
+            <label for="ctx_sa_employer" data-i18n="saEmployer">Employeur (optionnel)</label>
+            <p class="field-hint" data-i18n="saHint">Ces informations affinent l'évaluation de vos chances réelles et la fourchette de salaire à viser.</p>
+            <input type="text" id="ctx_sa_employer" maxlength="120" placeholder="ex. Jhpiego, Orange CI, PNUD">
           </div>
           <div>
-            <label for="job_client_info" data-i18n="labelClientInfo">Historique du client (optionnel)</label>
-            <input type="text" id="job_client_info" name="job_client_info" maxlength="300" placeholder="ex. paiement vérifié, 4,9/5, 32 missions">
+            <label for="ctx_sa_location" data-i18n="saLocation">Lieu et télétravail (optionnel)</label>
+            <input type="text" id="ctx_sa_location" maxlength="120" placeholder="ex. Abidjan, hybride 2 jours">
           </div>
           <div>
-            <label for="job_text" data-i18n="labelJobText">Texte complet de l'offre <span class="req">*</span></label>
-            <p class="field-hint" data-i18n="jobTextHint">Description, budget, compétences demandées, infos client si visibles.</p>
+            <label for="ctx_sa_contract" data-i18n="saContract">Type de contrat annoncé (optionnel)</label>
+            <select id="ctx_sa_contract">
+              <option value="" data-i18n="saContractNone">Non précisé</option>
+              <option value="CDI" data-i18n="saContractCdi">CDI</option>
+              <option value="CDD" data-i18n="saContractCdd">CDD</option>
+              <option value="Intérim ou mission" data-i18n="saContractInterim">Intérim ou mission</option>
+              <option value="Stage" data-i18n="saContractStage">Stage</option>
+              <option value="Alternance" data-i18n="saContractAlt">Alternance</option>
+            </select>
+          </div>
+          <div>
+            <label for="ctx_sa_salary" data-i18n="saSalary">Salaire affiché (optionnel)</label>
+            <input type="text" id="ctx_sa_salary" maxlength="120" placeholder="ex. 900 000 – 1 200 000 FCFA / mois">
+          </div>
+        </div>
+
+        <div class="qgrid" data-type-block="consultance" style="display:none;">
+          <div>
+            <label for="ctx_co_client" data-i18n="coClient">Commanditaire : ONG, bailleur, agence (optionnel)</label>
+            <p class="field-hint" data-i18n="coHint">Ces informations servent à juger l'éligibilité, la charge réelle et le budget à proposer.</p>
+            <input type="text" id="ctx_co_client" maxlength="120" placeholder="ex. UNICEF, GIZ, Banque mondiale">
+          </div>
+          <div>
+            <label for="ctx_co_duree" data-i18n="coDuree">Durée annoncée ou nombre de jours (optionnel)</label>
+            <input type="text" id="ctx_co_duree" maxlength="120" placeholder="ex. 45 jours-homme sur 4 mois">
+          </div>
+          <div>
+            <label for="ctx_co_budget" data-i18n="coBudget">Budget plafond annoncé (optionnel)</label>
+            <input type="text" id="ctx_co_budget" maxlength="120" placeholder="ex. 25 000 USD toutes taxes comprises">
+          </div>
+          <div>
+            <label for="ctx_co_deadline" data-i18n="coDeadline">Date limite de soumission (optionnel)</label>
+            <input type="text" id="ctx_co_deadline" maxlength="120" placeholder="ex. 30 septembre 2026">
+          </div>
+        </div>
+
+        <div class="qgrid">
+          <div>
+            <label for="job_text" id="lbl-job-text">Texte complet de l'offre <span class="req">*</span></label>
+            <p class="field-hint" id="hint-job-text">Description, budget, compétences demandées, infos client si visibles.</p>
             <textarea id="job_text" name="job_text" required maxlength="20000"></textarea>
           </div>
         </div>
@@ -326,6 +419,20 @@
         <p class="file-title" id="result-title"></p>
         <p class="file-meta" id="result-meta" data-i18n="resultMeta">Format : HTML, dans la langue de cette page</p>
         <button type="button" class="btn btn-primary" id="reveal-payment-btn" style="display:none;" data-i18n="downloadAgainBtn">Télécharger à nouveau →</button>
+
+        <div class="type-confirm" id="type-confirm" style="display:none;">
+          <p class="tc-title" data-i18n="tcTitle">Offre identifiée</p>
+          <p class="tc-sub" id="tc-motif"></p>
+          <div class="tc-scam" id="tc-scam" style="display:none;"></div>
+          <p class="tc-warn" id="tc-warn" style="display:none;"></p>
+          <label for="job_type_select" data-i18n="tcLabel">Type d'offre retenu pour l'analyse</label>
+          <select id="job_type_select">
+            <option value="freelance" data-i18n="tcFreelance">Mission freelance (Upwork, Malt, Fiverr…)</option>
+            <option value="salarie" data-i18n="tcSalarie">Poste salarié (CDI, CDD, entreprise, ONG)</option>
+            <option value="consultance" data-i18n="tcConsultance">Appel à consultance / termes de référence</option>
+          </select>
+          <button type="button" class="btn btn-primary" id="start-analysis-btn" data-i18n="tcStart">Lancer l'analyse →</button>
+        </div>
 
         <div class="payment-area show" id="payment-area">
           <div id="waiting-note" class="result-note pending" role="status" aria-live="polite"></div>
@@ -346,7 +453,7 @@
   </main>
 
 
-  <footer class="foot">Irié Armand Davy TRE BI  •  Data Analyst</footer>
+  <footer class="foot">Irié Armand Davy TRE BI &nbsp;•&nbsp; Data Analyst &nbsp;•&nbsp; <a href="achat.html" style="color:var(--accent);">Créditer mon compte</a></footer>
 </div>
 
 <script>
@@ -414,6 +521,7 @@ async function postPrecheck(payload) {
 const MAX_CV_BYTES = 4 * 1024 * 1024;
 
 const LS_PENDING_REQUEST = 'upwork_pending_request';
+const TYPES_OFFRE = ['freelance', 'salarie', 'consultance'];
 
 /* ===================================================================
    TRADUCTIONS
@@ -573,7 +681,7 @@ let currentLang = 'en';
 const MAJ_LANCEMENT = {
   fr: {
     step3: "03 — Analyse et résultat",
-    sub: "Dépose ton CV et le texte de l'offre : tu reçois l'analyse complète en moins de deux minutes.",
+    sub: "Mission freelance, poste salarié ou appel à consultance : dépose ton CV et le texte de l'offre, tu reçois l'analyse complète en moins de deux minutes.",
     launchNote: "<b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.",
     planChooseBtn: "Analyser une offre →",
     planTacheLabel: "Analyse ponctuelle — offerte pendant le lancement",
@@ -584,6 +692,66 @@ const MAJ_LANCEMENT = {
     labelAvgBid: "Enchère moyenne des concurrents (optionnel)",
     labelClientInfo: "Historique du client (optionnel)",
     prg1: "Contrôle de recevabilité",
+    tcTitle: "Offre identifiée",
+    scamPre: "Signaux d'arnaque repérés dans cette annonce. ",
+    scamTitle: "Alerte arnaque",
+    scamHigh: "Risque élevé d'arnaque. ",
+    scamLow: "Signaux douteux relevés. ",
+    scamSeeReport: "Le détail figure en tête de votre rapport : ce qui a déclenché l'alerte, et les gestes à appliquer.",
+    typeTag: "◆ De quel type d'offre s'agit-il ?",
+    typeHint: "Le formulaire et le rapport s'adaptent au type choisi. Le service vérifie ensuite ce choix à partir du texte de l'offre.",
+    typeFreelanceT: "Mission freelance", typeFreelanceD: "Upwork, Malt, Fiverr, Freelancer…",
+    typeSalarieT: "Poste salarié", typeSalarieD: "CDI, CDD, entreprise, ONG, administration",
+    typeConsultanceT: "Appel à consultance", typeConsultanceD: "Termes de référence, bailleur, agence",
+    typeCourt_freelance: "mission freelance", typeCourt_salarie: "poste salarié", typeCourt_consultance: "appel à consultance",
+    tcMismatch: "Vous avez indiqué « {choisi} », mais le texte ressemble plutôt à « {detecte} ». Corrigez le type ci-dessous si besoin : c'est lui qui décide de la forme du rapport.",
+    errNoType: "Commencez par indiquer le type d'offre.",
+    jobTag_freelance: "◆ La mission à analyser",
+    jobTag_salarie: "◆ L'annonce à analyser",
+    jobTag_consultance: "◆ L'appel à consultance à analyser",
+    lblTitle_freelance: 'Titre de la mission <span class="req">*</span>',
+    lblTitle_salarie: 'Intitulé du poste <span class="req">*</span>',
+    lblTitle_consultance: 'Intitulé de la mission ou des TDR <span class="req">*</span>',
+    lblUrl_freelance: "Lien de la mission (optionnel)",
+    lblUrl_salarie: "Lien de l'annonce (optionnel)",
+    lblUrl_consultance: "Lien ou référence de l'appel (optionnel)",
+    phUrl_freelance: "https://www.upwork.com/jobs/...",
+    phUrl_salarie: "https://www.linkedin.com/jobs/...",
+    phUrl_consultance: "https://... ou référence de l'avis",
+    lblText_freelance: 'Texte complet de la mission <span class="req">*</span>',
+    lblText_salarie: "Texte complet de l'annonce <span class=\"req\">*</span>",
+    lblText_consultance: 'Texte complet des termes de référence <span class="req">*</span>',
+    hintText_freelance: "Description, budget, compétences demandées, infos client si visibles.",
+    hintText_salarie: "Missions, profil recherché, compétences, avantages, processus de recrutement.",
+    hintText_consultance: "Contexte, objectifs, livrables attendus, durée, profil du consultant, modalités de soumission.",
+    flProposals: "Nombre de propositions déjà envoyées (optionnel)",
+    flHint: "Ces informations sont visibles sur la page de la mission. Elles rendent le score « chances réelles » nettement plus fiable.",
+    flAvgBid: "Enchère moyenne des concurrents (optionnel)",
+    flClient: "Historique du client : paiement vérifié, note, missions (optionnel)",
+    saEmployer: "Employeur (optionnel)",
+    saHint: "Ces informations affinent l'évaluation de vos chances réelles et la fourchette de salaire à viser.",
+    saLocation: "Lieu et télétravail (optionnel)",
+    saContract: "Type de contrat annoncé (optionnel)",
+    saContractNone: "Non précisé", saContractCdi: "CDI", saContractCdd: "CDD",
+    saContractInterim: "Intérim ou mission", saContractStage: "Stage", saContractAlt: "Alternance",
+    saSalary: "Salaire affiché (optionnel)",
+    coClient: "Commanditaire : ONG, bailleur, agence (optionnel)",
+    coHint: "Ces informations servent à juger l'éligibilité, la charge réelle et le budget à proposer.",
+    coDuree: "Durée annoncée ou nombre de jours (optionnel)",
+    coBudget: "Budget plafond annoncé (optionnel)",
+    coDeadline: "Date limite de soumission (optionnel)",
+    tcLabel: "Type d'offre retenu pour l'analyse",
+    tcFreelance: "Mission freelance (Upwork, Malt, Fiverr…)",
+    tcSalarie: "Poste salarié (CDI, CDD, entreprise, ONG)",
+    tcConsultance: "Appel à consultance / termes de référence",
+    tcStart: "Lancer l'analyse →",
+    tagline: "Zéro candidature à l'aveugle",
+    h1: "On analyse l'offre avant que tu ne postules.",
+    labelProposals: "Nombre de candidatures déjà envoyées (optionnel)",
+    proposalsHint: "Ces trois informations, quand elles sont visibles sur l'annonce, rendent le score « chances réelles » nettement plus fiable.",
+    labelAvgBid: "Prétention ou enchère moyenne des concurrents (optionnel)",
+    labelClientInfo: "Informations sur le client ou l'employeur (optionnel)",
+    readyTitle: "Prêt à analyser",
     prg2: "Lecture du CV et de l'offre",
     statusChecking: "Vérification du CV et de l'offre…",
     runningTitle: "Analyse en cours",
@@ -595,7 +763,7 @@ const MAJ_LANCEMENT = {
   },
   en: {
     step3: "03 — Analysis and result",
-    sub: "Drop your CV and the job text: you get the full analysis in under two minutes.",
+    sub: "Freelance gig, salaried role or consultancy call: drop your CV and the job text, you get the full analysis in under two minutes.",
     launchNote: "<b>Launch phase:</b> analyses are free, up to 3 per day per email address. The prices below will apply once payments open.",
     planChooseBtn: "Analyze a job →",
     planTacheLabel: "One-time analysis — free during launch",
@@ -606,6 +774,66 @@ const MAJ_LANCEMENT = {
     labelAvgBid: "Competitors' average bid (optional)",
     labelClientInfo: "Client history (optional)",
     prg1: "Eligibility check",
+    tcTitle: "Job identified",
+    scamPre: "Scam signals spotted in this posting. ",
+    scamTitle: "Scam alert",
+    scamHigh: "High risk of scam. ",
+    scamLow: "Doubtful signals found. ",
+    scamSeeReport: "The details are at the top of your report: what triggered the alert, and what to do about it.",
+    typeTag: "◆ What kind of posting is this?",
+    typeHint: "The form and the report adapt to the type you pick. The service then double-checks that choice against the text.",
+    typeFreelanceT: "Freelance gig", typeFreelanceD: "Upwork, Malt, Fiverr, Freelancer…",
+    typeSalarieT: "Salaried role", typeSalarieD: "Permanent, fixed-term, company, NGO, public sector",
+    typeConsultanceT: "Consultancy call", typeConsultanceD: "Terms of reference, donor, agency",
+    typeCourt_freelance: "freelance gig", typeCourt_salarie: "salaried role", typeCourt_consultance: "consultancy call",
+    tcMismatch: "You selected \u201c{choisi}\u201d, but the text reads more like \u201c{detecte}\u201d. Correct the type below if needed: it decides the shape of the report.",
+    errNoType: "Start by picking the type of posting.",
+    jobTag_freelance: "◆ The gig to analyze",
+    jobTag_salarie: "◆ The job posting to analyze",
+    jobTag_consultance: "◆ The consultancy call to analyze",
+    lblTitle_freelance: 'Gig title <span class="req">*</span>',
+    lblTitle_salarie: 'Job title <span class="req">*</span>',
+    lblTitle_consultance: 'Assignment or ToR title <span class="req">*</span>',
+    lblUrl_freelance: "Link to the gig (optional)",
+    lblUrl_salarie: "Link to the posting (optional)",
+    lblUrl_consultance: "Link or reference of the call (optional)",
+    phUrl_freelance: "https://www.upwork.com/jobs/...",
+    phUrl_salarie: "https://www.linkedin.com/jobs/...",
+    phUrl_consultance: "https://... or notice reference",
+    lblText_freelance: 'Full text of the gig <span class="req">*</span>',
+    lblText_salarie: 'Full text of the posting <span class="req">*</span>',
+    lblText_consultance: 'Full text of the terms of reference <span class="req">*</span>',
+    hintText_freelance: "Description, budget, required skills, client info if visible.",
+    hintText_salarie: "Responsibilities, required profile, skills, benefits, hiring process.",
+    hintText_consultance: "Background, objectives, expected deliverables, duration, consultant profile, submission rules.",
+    flProposals: "Proposals already sent (optional)",
+    flHint: "These are shown on the gig page. They make the \u201creal odds\u201d score far more reliable.",
+    flAvgBid: "Competitors' average bid (optional)",
+    flClient: "Client history: payment verified, rating, jobs (optional)",
+    saEmployer: "Employer (optional)",
+    saHint: "These sharpen both the odds estimate and the salary range to aim for.",
+    saLocation: "Location and remote setup (optional)",
+    saContract: "Contract type stated (optional)",
+    saContractNone: "Not stated", saContractCdi: "Permanent", saContractCdd: "Fixed-term",
+    saContractInterim: "Temporary or contract", saContractStage: "Internship", saContractAlt: "Apprenticeship",
+    saSalary: "Salary stated (optional)",
+    coClient: "Commissioning body: NGO, donor, agency (optional)",
+    coHint: "These help judge eligibility, real workload and the budget to propose.",
+    coDuree: "Stated duration or number of days (optional)",
+    coBudget: "Stated budget ceiling (optional)",
+    coDeadline: "Submission deadline (optional)",
+    tcLabel: "Type of posting used for the analysis",
+    tcFreelance: "Freelance gig (Upwork, Malt, Fiverr…)",
+    tcSalarie: "Salaried role (permanent, fixed-term, company, NGO)",
+    tcConsultance: "Consultancy call / terms of reference",
+    tcStart: "Start the analysis →",
+    tagline: "No blind applications",
+    h1: "We analyze the job before you apply.",
+    labelProposals: "Applications already sent (optional)",
+    proposalsHint: "When the posting shows them, these three make the \u201creal odds\u201d score far more reliable.",
+    labelAvgBid: "Competitors' average bid or expectation (optional)",
+    labelClientInfo: "Client or employer information (optional)",
+    readyTitle: "Ready to analyze",
     prg2: "Reading CV and job posting",
     statusChecking: "Checking your CV and the job posting\u2026",
     runningTitle: "Analysis in progress",
@@ -825,6 +1053,7 @@ function renderSample() {
    ETAT
    =================================================================== */
 let selectedPlan = null;
+let selectedType = null;   // freelance | salarie | consultance
 let reportData = null;      // rapport recu du serveur
 let pendingRequest = null;  // demande en cours d'envoi
 let selectedFileName = null;
@@ -940,6 +1169,7 @@ function afficherListeFichiers(prets) {
     // Le nom du fichier choisi etait ecrase par la traduction du libelle.
     if (selectedFileName) fileDropLabel.textContent = selectedFileName;
     if (selectedPlan) updatePlanRecap();
+    if (selectedType) appliquerType();
     if (reportData) {
       document.getElementById('result-title').textContent =
         t().resultTitlePrefix + (reportData.job_title || '');
@@ -980,6 +1210,57 @@ function afficherListeFichiers(prets) {
   });
 
   document.getElementById('change-plan-btn').addEventListener('click', function () { showStep('plans'); });
+
+  /* ==================================================================
+     TYPE D'OFFRE
+     Le choix se fait AVANT la saisie : les champs, les intitules et le
+     rapport different selon qu'il s'agit d'une mission freelance, d'un
+     poste salarie ou d'un appel a consultance.
+     ================================================================== */
+  function appliquerType() {
+    if (!selectedType) return;
+    document.querySelectorAll('.type-card').forEach(function (c) {
+      c.classList.toggle('active', c.getAttribute('data-type') === selectedType);
+    });
+    document.querySelectorAll('[data-type-block]').forEach(function (b) {
+      b.style.display = b.getAttribute('data-type-block') === selectedType ? '' : 'none';
+    });
+    document.getElementById('job-tag').innerHTML = t()['jobTag_' + selectedType];
+    document.getElementById('lbl-job-title').innerHTML = t()['lblTitle_' + selectedType];
+    document.getElementById('lbl-job-url').innerHTML = t()['lblUrl_' + selectedType];
+    document.getElementById('lbl-job-text').innerHTML = t()['lblText_' + selectedType];
+    document.getElementById('hint-job-text').innerHTML = t()['hintText_' + selectedType];
+    document.getElementById('job_url').placeholder = t()['phUrl_' + selectedType];
+  }
+
+  document.querySelectorAll('.type-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      selectedType = card.getAttribute('data-type');
+      form.style.display = '';
+      appliquerType();
+      document.getElementById('freelance_name').focus();
+    });
+  });
+
+  // Les intitules des champs partent tels quels dans l'analyse : le modele
+  // recoit \"Salaire affiche : ...\" plutot qu'un nom technique.
+  function collecterContexte() {
+    const bloc = document.querySelector('[data-type-block=\"' + selectedType + '\"]');
+    if (!bloc) return [];
+    const sortie = [];
+    bloc.querySelectorAll('input, select').forEach(function (el) {
+      // Pour une liste, on envoie le libelle affiche et non la valeur
+      // technique : le modele lit "CDI", pas un code.
+      const v = (el.tagName === 'SELECT')
+        ? (el.value ? el.options[el.selectedIndex].text.trim() : '')
+        : String(el.value || '').trim();
+      if (!v) return;
+      const lab = bloc.querySelector('label[for=\"' + el.id + '\"]');
+      const intitule = lab ? lab.textContent.replace(/\s*\((optionnel|optional)\)\s*/i, '').trim() : el.id;
+      sortie.push({ label: intitule, value: v.slice(0, 300) });
+    });
+    return sortie;
+  }
 
   fileDrop.addEventListener('click', function () { fileInput.click(); });
   fileInput.addEventListener('change', function () {
@@ -1025,6 +1306,7 @@ function afficherListeFichiers(prets) {
     const jobText = document.getElementById('job_text').value.trim();
     const file = fileInput.files[0];
 
+    if (!selectedType) { showStatus('err', t().errNoType); return; }
     if (!name) { showStatus('err', t().errNoName); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showStatus('err', t().errNoEmail); return; }
     if (!file) { showStatus('err', t().statusMissingCv); return; }
@@ -1047,9 +1329,11 @@ function afficherListeFichiers(prets) {
         job_title: jobTitle,
         job_url: document.getElementById('job_url').value.trim(),
         job_text: jobText,
-        job_proposals: document.getElementById('job_proposals').value.trim(),
-        job_avg_bid: document.getElementById('job_avg_bid').value.trim(),
-        job_client_info: document.getElementById('job_client_info').value.trim()
+        job_type: selectedType,
+        job_context: collecterContexte(),
+        // Renseigne juste apres le pre-controle : permet au serveur de
+        // reprendre son verdict au lieu de refaire l'appel au modele.
+        precheck_id: ''
       };
     } catch (err) {
       setBusy(false);
@@ -1090,11 +1374,62 @@ function afficherListeFichiers(prets) {
 
     statusBox.className = 'result-note';
     reportData = null;
-    document.getElementById('result-title').textContent = t().runningTitle + ' — ' + jobTitle;
+
+    // Le pre-controle relit le texte et dit a quel type il ressemble. Le
+    // choix du client reste celui retenu ; on ne l'alerte que si le texte
+    // ressemble a autre chose, parce qu'un TDR analyse comme un poste
+    // salarie produit un rapport hors sujet.
+    // Le serveur ne refera pas le pre-controle si on lui rappelle celui
+    // qui vient d'avoir lieu, et qu'il retrouve le meme contenu.
+    if (verif && verif.precheck_id) pendingRequest.precheck_id = verif.precheck_id;
+
+    const typeDetecte = TYPES_OFFRE.indexOf(verif && verif.type_offre) !== -1
+      ? verif.type_offre : selectedType;
+    const tcWarn = document.getElementById('tc-warn');
+    const tcScam = document.getElementById('tc-scam');
+
+    // Signal d'arnaque du pre-controle : on previent AVANT de lancer
+    // l'analyse. Le client garde la main : c'est une alerte, pas un blocage.
+    if (verif && verif.risque_arnaque === 'suspect') {
+      tcScam.style.display = '';
+      tcScam.innerHTML = '<b>' + t().scamPre + '</b>' +
+        String(verif.motif_arnaque || '').replace(/</g, '&lt;');
+    } else {
+      tcScam.style.display = 'none';
+      tcScam.innerHTML = '';
+    }
+
+    document.getElementById('job_type_select').value = selectedType;
+    document.getElementById('tc-motif').textContent = (verif && verif.motif_type) ? verif.motif_type : '';
+    if (typeDetecte !== selectedType) {
+      tcWarn.style.display = '';
+      tcWarn.textContent = t().tcMismatch
+        .replace('{choisi}', t()['typeCourt_' + selectedType])
+        .replace('{detecte}', t()['typeCourt_' + typeDetecte]);
+    } else {
+      tcWarn.style.display = 'none';
+      tcWarn.textContent = '';
+    }
+    document.getElementById('type-confirm').style.display = '';
+
+    document.getElementById('result-title').textContent = t().readyTitle + ' — ' + jobTitle;
     document.getElementById('result-meta').textContent = t().readyMeta;
     document.getElementById('reveal-payment-btn').style.display = 'none';
     document.getElementById('files-list').classList.remove('show');
     showStep('result');
+  });
+
+  // Confirmation du type, puis lancement de l'analyse.
+  document.getElementById('start-analysis-btn').addEventListener('click', function () {
+    if (analyseEnCours) return;
+    if (pendingRequest) {
+      selectedType = document.getElementById('job_type_select').value;
+      pendingRequest.job_type = selectedType;
+      pendingRequest.job_context = collecterContexte();
+    }
+    document.getElementById('type-confirm').style.display = 'none';
+    document.getElementById('result-title').textContent =
+      t().runningTitle + ' — ' + (pendingRequest ? pendingRequest.job_title : '');
     lancerAnalyse();
   });
 
@@ -1169,6 +1504,22 @@ function afficherListeFichiers(prets) {
     };
 
     document.getElementById('result-title').textContent = t().resultTitlePrefix + reportData.job_title;
+
+    // L'analyse a tranche : si elle conclut a un risque, on le redit ici,
+    // parce que le rapport peut n'etre ouvert que plus tard.
+    const niveau = data.arnaque_niveau;
+    if (niveau === 'eleve' || niveau === 'faible') {
+      const zone = document.getElementById('tc-scam');
+      zone.style.display = '';
+      zone.innerHTML = '<b>' + (niveau === 'eleve' ? t().scamHigh : t().scamLow) + '</b>' + t().scamSeeReport;
+      document.getElementById('type-confirm').style.display = '';
+      document.getElementById('job_type_select').style.display = 'none';
+      document.querySelector('#type-confirm label').style.display = 'none';
+      document.getElementById('start-analysis-btn').style.display = 'none';
+      document.getElementById('tc-motif').textContent = '';
+      document.getElementById('tc-warn').style.display = 'none';
+      document.querySelector('#type-confirm .tc-title').textContent = t().scamTitle;
+    }
 
     triggerDownloads(function (ok) {
       prgTerminer();
