@@ -52,16 +52,21 @@
     line-height:1.15;color:var(--navy);margin:0 0 8px;}
   .sub{color:var(--muted);font-size:14.5px;max-width:62ch;margin:0 0 18px;}
 
-  .plans{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;}
-  @media (max-width:600px){.plans{grid-template-columns:1fr;}}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px;}
+  @media (max-width:720px){.plans{grid-template-columns:1fr;}}
   .plan-card{border:1px solid var(--border);border-radius:var(--radius);padding:17px 18px;background:var(--paper);display:flex;flex-direction:column;}
   .plan-card .ptag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;}
   .plan-card h3{font-family:'Space Grotesk',sans-serif;font-size:17px;color:var(--navy);margin:0 0 3px;}
   .plan-card .price{font-size:15px;color:var(--navy);font-weight:600;margin:0 0 7px;}
   .plan-card .desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 13px;flex:1;}
-  .plan-card button.btn{width:100%;justify-content:center;background:var(--accent);color:#fff;font-size:14px;
-    padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-family:inherit;}
-  .plan-card button.btn:hover{background:var(--navy);}
+  .plan-card .btn{width:100%;justify-content:center;background:var(--accent);color:#fff;font-size:14px;
+    padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-family:inherit;margin-top:auto;}
+  .plan-card .btn:hover{background:var(--navy);}
+  .start-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;background:var(--accent);color:#fff;font-size:15px;font-weight:600;padding:13px 18px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;margin-bottom:18px;}
+  .start-btn:hover{background:var(--navy);}
+  .plans-intro{font-size:13px;color:var(--muted);margin:0 0 12px;}
+  .plans-note{font-size:12px;color:var(--muted);margin:10px 0 0;}
+  .plan-card.best{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
 
   .qtag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:16px;}
   .qtag.two{color:var(--amber);}
@@ -245,24 +250,35 @@
       <span class="eyebrow" data-i18n="eyebrow">● Réservé aux profils data / BI / analytics</span>
       <h1 data-i18n="h1">On analyse l'offre avant que tu ne postules.</h1>
       <p class="sub" data-i18n="sub">Mission freelance, poste salarié ou appel à consultance : dépose ton CV et le texte de l'offre, tu reçois l'analyse complète en moins de deux minutes.</p>
-      <div class="launch-note" data-i18n="launchNote"><b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.</div>
+      <div class="launch-note" data-i18n="launchNote"><b>Phase de lancement :</b> une analyse offerte par adresse email. Au-delà, rechargez votre compte avec un pack ci-dessous, disponible dès maintenant.</div>
 
+            <button type="button" class="start-btn" data-plan="gratuit" data-i18n="startFreeBtn">Analyser une offre gratuitement →</button>
+
+      <p class="plans-intro" data-i18n="plansIntro">Après votre analyse offerte, rechargez votre compte. Les crédits n'expirent pas.</p>
       <div class="plans">
         <div class="plan-card">
-          <span class="ptag" data-i18n="planTaskTag">À la tâche</span>
-          <h3 data-i18n="planTaskTitle">Analyse ponctuelle</h3>
-          <p class="price" data-i18n="planTaskPrice">3 000 FCFA</p>
-          <p class="desc" data-i18n="planTaskDesc">Une offre analysée : double score, signaux d'alerte, stratégie de contrat avec jalons, et lettre de motivation prête à envoyer.</p>
-          <button type="button" class="btn" data-plan="tache" data-i18n="planChooseBtn">Analyser une offre →</button>
+          <span class="ptag" data-i18n="planUniteTag">Pour essayer</span>
+          <h3 data-i18n="planUniteTitle">À l'unité</h3>
+          <p class="price" data-i18n="planUnitePrice">2 500 F CFA</p>
+          <p class="desc" data-i18n="planUniteDesc">Une analyse : rapport complet et lettre de motivation comprise.</p>
+          <a class="btn" href="achat.html?activer=unite" data-i18n="planChooseBtn">Choisir cette formule</a>
+        </div>
+        <div class="plan-card best">
+          <span class="ptag" data-i18n="planPack10Tag">Le plus pris</span>
+          <h3 data-i18n="planPack10Title">Pack 10</h3>
+          <p class="price" data-i18n="planPack10Price">7 500 F CFA</p>
+          <p class="desc" data-i18n="planPack10Desc">Dix analyses. De quoi trier sérieusement une semaine de candidatures.</p>
+          <a class="btn" href="achat.html?activer=pack10" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
         <div class="plan-card">
-          <span class="ptag" data-i18n="planSubTag">Accès 30 jours</span>
-          <h3 data-i18n="planSubTitle">Analyses illimitées</h3>
-          <p class="price" data-i18n="planSubPrice">5 000 FCFA</p>
-          <p class="desc" data-i18n="planSubDesc">Analysez autant d'offres que vous voulez pendant 30 jours. Paiement unique, sans reconduction automatique.</p>
-          <button type="button" class="btn" data-plan="abonnement" data-i18n="planChooseBtn">Analyser une offre →</button>
+          <span class="ptag" data-i18n="planPack30Tag">Recherche active</span>
+          <h3 data-i18n="planPack30Title">Pack 30</h3>
+          <p class="price" data-i18n="planPack30Price">15 000 F CFA</p>
+          <p class="desc" data-i18n="planPack30Desc">Trente analyses. Pour une recherche menée à plein temps.</p>
+          <a class="btn" href="achat.html?activer=pack30" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
       </div>
+      <p class="plans-note" data-i18n="plansNote">Paiement sur Chariow, par Mobile Money (Orange, MTN, Moov, Wave) ou carte. Utilisez la même adresse email partout.</p>
 
       <details class="sample" id="sample-block">
         <summary data-i18n="sampleTitle">Voir un exemple d'analyse complète (celle que je me fais à moi-même)</summary>
@@ -543,13 +559,19 @@ const translations = {
     eyebrow: "● Réservé aux profils data / BI / analytics",
     h1: "On regarde l'offre avant que tu ne postules.",
     sub: "Choisis ta formule. Tu ne paies qu'au téléchargement, une fois ton analyse prête.",
-    planTaskTag: "À la tâche", planTaskTitle: "Analyse ponctuelle", planTaskPrice: "3 000 FCFA",
-    planTaskDesc: "Une offre analysée : double score, signaux d'alerte, stratégie de contrat avec jalons, et lettre de motivation prête à envoyer.",
-    planSubTag: "Accès 30 jours", planSubTitle: "Analyses illimitées", planSubPrice: "5 000 FCFA",
-    planSubDesc: "Analysez autant d'offres que vous voulez pendant 30 jours. Paiement unique, sans reconduction automatique.",
+    startFreeBtn: "Analyser une offre gratuitement →",
+    plansIntro: "Après votre analyse offerte, rechargez votre compte. Les crédits n'expirent pas.",
+    planUniteTag: "Pour essayer", planUniteTitle: "À l'unité", planUnitePrice: "2 500 F CFA",
+    planUniteDesc: "Une analyse : rapport complet et lettre de motivation comprise.",
+    planPack10Tag: "Le plus pris", planPack10Title: "Pack 10", planPack10Price: "7 500 F CFA",
+    planPack10Desc: "Dix analyses. De quoi trier sérieusement une semaine de candidatures.",
+    planPack30Tag: "Recherche active", planPack30Title: "Pack 30", planPack30Price: "15 000 F CFA",
+    planPack30Desc: "Trente analyses. Pour une recherche menée à plein temps.",
+    plansNote: "Paiement sur Chariow, par Mobile Money (Orange, MTN, Moov, Wave) ou carte. Utilisez la même adresse email partout.",
+    planFreeLabel: "Analyse offerte pendant le lancement",
     planChooseBtn: "Choisir cette formule",
     recapPrefix: "Formule choisie : ",
-    changePlanBtn: "Changer de formule",
+    changePlanBtn: "Retour",
     profileTag: "◆ Votre profil",
     labelName: 'Nom <span class="req">*</span>',
     labelEmail: 'Adresse email <span class="req">*</span>',
@@ -591,8 +613,6 @@ const translations = {
     statusChecking: "Vérification du CV et de l'offre avant paiement…",
     statusNetworkErr: "Impossible de joindre le service d'analyse. Vérifie ta connexion et réessaie.",
     statusServerErr: "Le service d'analyse a rencontré une erreur. Réessaie dans quelques minutes.",
-    planTacheLabel: "À la tâche — 3 000 FCFA",
-    planAbonnementLabel: "Accès 30 jours — 5 000 FCFA",
     paidPageTitle: "Paiement confirmé",
     paidPageBody: "Tu peux fermer cet onglet et retourner sur celui où tu as lancé ton analyse — le téléchargement va démarrer automatiquement.",
     paidPageBodySameTab: "Ton téléchargement démarre dans un instant…"
@@ -613,13 +633,19 @@ const translations = {
     eyebrow: "● For data / BI / analytics freelancers only",
     h1: "We check the job before you apply.",
     sub: "Choose your plan. You only pay at download, once your analysis is ready.",
-    planTaskTag: "Per task", planTaskTitle: "One-time analysis", planTaskPrice: "$5",
-    planTaskDesc: "One job analyzed: dual score, red flags, contract strategy with milestones, and a ready-to-send cover letter.",
-    planSubTag: "30-day access", planSubTitle: "Unlimited analyses", planSubPrice: "$9",
-    planSubDesc: "Analyze as many jobs as you want for 30 days. One-time payment, no automatic renewal.",
+    startFreeBtn: "Analyze a job for free →",
+    plansIntro: "After your free analysis, top up your account. Credits never expire.",
+    planUniteTag: "To try it", planUniteTitle: "Single", planUnitePrice: "2,500 F CFA",
+    planUniteDesc: "One analysis: full report and cover letter included.",
+    planPack10Tag: "Most chosen", planPack10Title: "Pack of 10", planPack10Price: "7,500 F CFA",
+    planPack10Desc: "Ten analyses. Enough to properly sort a week of applications.",
+    planPack30Tag: "Active search", planPack30Title: "Pack of 30", planPack30Price: "15,000 F CFA",
+    planPack30Desc: "Thirty analyses. For a full-time job search.",
+    plansNote: "Payment on Chariow, by Mobile Money (Orange, MTN, Moov, Wave) or card. Use the same email address everywhere.",
+    planFreeLabel: "Free analysis (launch phase)",
     planChooseBtn: "Choose this plan",
     recapPrefix: "Selected plan: ",
-    changePlanBtn: "Change plan",
+    changePlanBtn: "Back",
     profileTag: "◆ Your profile",
     labelName: 'Name <span class="req">*</span>',
     labelEmail: 'Email address <span class="req">*</span>',
@@ -661,8 +687,6 @@ const translations = {
     statusChecking: "Checking your CV and job posting before payment…",
     statusNetworkErr: "Could not reach the analysis service. Check your connection and try again.",
     statusServerErr: "The analysis service hit an error. Please try again in a few minutes.",
-    planTacheLabel: "Per task — $5",
-    planAbonnementLabel: "30-day access — $9",
     paidPageTitle: "Payment confirmed",
     paidPageBody: "You can close this tab and go back to the one where you started your analysis — the download will start automatically.",
     paidPageBodySameTab: "Your download is starting…"
@@ -682,10 +706,7 @@ const MAJ_LANCEMENT = {
   fr: {
     step3: "03 — Analyse et résultat",
     sub: "Mission freelance, poste salarié ou appel à consultance : dépose ton CV et le texte de l'offre, tu reçois l'analyse complète en moins de deux minutes.",
-    launchNote: "<b>Phase de lancement :</b> les analyses sont offertes, dans la limite de 3 par jour et par adresse email. Les tarifs ci-dessous s'appliqueront à l'ouverture des paiements.",
-    planChooseBtn: "Analyser une offre →",
-    planTacheLabel: "Analyse ponctuelle — offerte pendant le lancement",
-    planAbonnementLabel: "Analyses illimitées — offertes pendant le lancement",
+    launchNote: "<b>Phase de lancement :</b> une analyse offerte par adresse email. Au-delà, rechargez votre compte avec un pack ci-dessous, disponible dès maintenant.",
     emailWarn: "Votre rapport vous est aussi envoyé à cette adresse : vous ne le perdez pas si vous fermez l'onglet.",
     labelProposals: "Nombre de propositions déjà envoyées (optionnel)",
     proposalsHint: "Ces trois informations sont visibles sur la page de l'offre. Elles rendent le score « chances réelles » nettement plus fiable.",
@@ -764,10 +785,7 @@ const MAJ_LANCEMENT = {
   en: {
     step3: "03 — Analysis and result",
     sub: "Freelance gig, salaried role or consultancy call: drop your CV and the job text, you get the full analysis in under two minutes.",
-    launchNote: "<b>Launch phase:</b> analyses are free, up to 3 per day per email address. The prices below will apply once payments open.",
-    planChooseBtn: "Analyze a job →",
-    planTacheLabel: "One-time analysis — free during launch",
-    planAbonnementLabel: "Unlimited analyses — free during launch",
+    launchNote: "<b>Launch phase:</b> one free analysis per email address. Beyond that, top up with a pack below, available right now.",
     emailWarn: "Your report is also sent to this address, so you keep it even if you close the tab.",
     labelProposals: "Proposals already sent (optional)",
     proposalsHint: "All three are shown on the job page. They make the \u201creal odds\u201d score far more reliable.",
@@ -1197,8 +1215,7 @@ function afficherListeFichiers(prets) {
   }
 
   function updatePlanRecap() {
-    document.getElementById('selected-plan-label').textContent =
-      selectedPlan === 'tache' ? t().planTacheLabel : t().planAbonnementLabel;
+    document.getElementById('selected-plan-label').textContent = t().planFreeLabel;
   }
 
   document.querySelectorAll('[data-plan]').forEach(function (btn) {
