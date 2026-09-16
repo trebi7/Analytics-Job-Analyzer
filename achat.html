@@ -67,10 +67,25 @@
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     background:var(--accent);color:#fff;border:none;border-radius:10px;
     padding:13px 22px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;
-    margin-top:20px;width:100%;
+    margin-top:20px;width:100%;text-decoration:none;
   }
   .btn:hover:not(:disabled){background:var(--navy);}
   .btn:disabled{opacity:.55;cursor:default;}
+
+  /* Séparateur "ou payer sur Chariow" */
+  .paysep{display:flex;align-items:center;gap:12px;margin:20px 0 2px;color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;}
+  .paysep::before,.paysep::after{content:"";height:1px;background:var(--border);flex:1;}
+  .btn-chariow{background:var(--navy);}
+  .btn-chariow:hover:not(:disabled){background:var(--navy-deep);}
+
+  /* Panneau d'activation après paiement Chariow */
+  .activate{margin-top:14px;border:1px dashed var(--border);border-radius:12px;
+    padding:14px 16px;background:var(--paper);}
+  .activate p{margin:0 0 10px;font-size:13px;color:var(--muted);line-height:1.5;}
+  .activate p b{color:var(--navy);}
+  .btn-ghost{margin-top:0;background:#fff;color:var(--navy);border:1px solid var(--accent);}
+  .btn-ghost:hover:not(:disabled){background:#fff;color:var(--navy-deep);border-color:var(--navy-deep);}
 
   .channels{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;
     font-size:12.5px;color:var(--muted);}
@@ -107,6 +122,7 @@
   <main class="stage">
 
     <div class="alert ok" id="retour-msg"></div>
+    <div class="alert ok" id="ok-msg"></div>
     <div class="alert err" id="err-msg"></div>
 
     <span class="qtag" data-i18n="tag">Créditer mon compte</span>
@@ -120,6 +136,14 @@
     <input type="email" id="email" autocomplete="email" placeholder="vous@exemple.com">
 
     <button class="btn" id="pay-btn" data-i18n="btn">Payer par Mobile Money</button>
+
+    <div class="paysep"><span data-i18n="orPay">ou payer sur Chariow</span></div>
+    <a class="btn btn-chariow" id="chariow-btn" href="#" target="_blank" rel="noopener" data-i18n="chariowBtn">Payer sur Chariow</a>
+
+    <div class="activate">
+      <p><b data-i18n="activateTitle">Déjà payé sur Chariow ?</b> <span data-i18n="activateSub">Saisissez ci-dessus l'adresse email utilisée pour le paiement, puis activez vos crédits.</span></p>
+      <button class="btn btn-ghost" id="activate-btn" data-i18n="activateBtn">Activer mes crédits</button>
+    </div>
 
     <div class="channels">
       <span data-i18n="lblChannels">Moyens acceptés :</span>
@@ -151,6 +175,19 @@
 // Le corps part en text/plain pour eviter la requete preflight CORS que le
 // noeud Webhook ne traite pas ; n8n parse le JSON cote serveur.
 const CREATE_PAYMENT_URL = "https://davy77.app.n8n.cloud/webhook/creer-paiement";
+
+// Webhook n8n qui verifie une vente Chariow deja payee et credite le compte.
+// Chariow heberge sa propre page de paiement (liens ci-dessous) ; apres le
+// paiement, le client revient et clique "Activer mes credits".
+const VERIFY_CHARIOW_URL = "https://davy77.app.n8n.cloud/webhook/verifier-chariow";
+
+// Page produit Chariow par pack. L'id produit fait foi cote workflow pour le
+// nombre de credits accorde (peu importe le prix affiche sur Chariow).
+const CHARIOW_URLS = {
+  unite:  "https://ymkecnxg.mychariow.com/prd_35s5kk1w",
+  pack10: "https://ymkecnxg.mychariow.com/prd_gqsgg9nk",
+  pack30: "https://ymkecnxg.mychariow.com/prd_opnlzgiu"
+};
 
 // Affichage uniquement. Les montants qui font foi sont ceux du noeud
 // "Configuration paiement" dans n8n : c'est lui qui fixe le prix envoye a
@@ -190,7 +227,14 @@ const T = {
     errEmail:"Entrez une adresse email valide pour recevoir vos crédits.",
     errOffre:"Choisissez d'abord une offre.",
     errReseau:"Impossible de joindre le service de paiement. Vérifiez votre connexion et réessayez.",
-    retour:"Merci. Si votre paiement est passé, vos crédits sont déjà actifs et un email de confirmation vous attend. Retournez au formulaire d'analyse avec la même adresse email."
+    retour:"Merci. Si votre paiement est passé, vos crédits sont déjà actifs et un email de confirmation vous attend. Retournez au formulaire d'analyse avec la même adresse email.",
+    orPay:"ou payer sur Chariow",
+    chariowBtn:"Payer sur Chariow",
+    activateTitle:"Déjà payé sur Chariow ?",
+    activateSub:"Saisissez ci-dessus l'adresse email utilisée pour le paiement, puis activez vos crédits.",
+    activateBtn:"Activer mes crédits",
+    activateWait:"Vérification du paiement…",
+    activateReturn:"Vous revenez de Chariow. Saisissez l'adresse email utilisée pour payer, puis cliquez « Activer mes crédits »."
   },
   en: {
     tagline:"No more blind applications",
@@ -217,7 +261,14 @@ const T = {
     errEmail:"Enter a valid email address to receive your credits.",
     errOffre:"Pick an offer first.",
     errReseau:"The payment service could not be reached. Check your connection and try again.",
-    retour:"Thank you. If your payment went through, your credits are already active and a confirmation email is waiting for you. Go back to the analysis form with the same email address."
+    retour:"Thank you. If your payment went through, your credits are already active and a confirmation email is waiting for you. Go back to the analysis form with the same email address.",
+    orPay:"or pay on Chariow",
+    chariowBtn:"Pay on Chariow",
+    activateTitle:"Already paid on Chariow?",
+    activateSub:"Enter above the email address you used for the payment, then activate your credits.",
+    activateBtn:"Activate my credits",
+    activateWait:"Checking your payment…",
+    activateReturn:"You're back from Chariow. Enter the email address you paid with, then click \"Activate my credits\"."
   }
 };
 
@@ -250,6 +301,10 @@ function rendreOffres(){
       rendreOffres();
     });
   });
+
+  // Le bouton Chariow pointe vers la page produit du pack selectionne.
+  const cb = document.getElementById('chariow-btn');
+  if (cb) cb.href = CHARIOW_URLS[choisie] || '#';
 }
 
 function appliquerLangue(){
@@ -268,7 +323,16 @@ function appliquerLangue(){
 }
 
 function erreur(msg){
+  document.getElementById('ok-msg').classList.remove('show');
   const el = document.getElementById('err-msg');
+  el.textContent = msg;
+  el.classList.add('show');
+  el.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+function succes(msg){
+  document.getElementById('err-msg').classList.remove('show');
+  const el = document.getElementById('ok-msg');
   el.textContent = msg;
   el.classList.add('show');
   el.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -317,11 +381,53 @@ async function payer(){
 }
 
 /* ===================================================================
+   ACTIVATION CHARIOW
+   =================================================================== */
+// Apres avoir paye sur Chariow, le client revient et clique "Activer mes
+// credits". On envoie l'email au webhook de verification, qui interroge
+// l'API Chariow et credite le compte. Meme entete text/plain que le paiement
+// pour eviter le preflight CORS.
+async function activer(){
+  effacerErreur();
+  const d = t();
+  const email = document.getElementById('email').value.trim();
+
+  if (!/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(email)) { erreur(d.errEmail); return; }
+
+  const btn = document.getElementById('activate-btn');
+  btn.disabled = true;
+  btn.textContent = d.activateWait;
+
+  try {
+    const res = await fetch(VERIFY_CHARIOW_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ email: email, ui_lang: lang, offre: choisie })
+    });
+    const data = await res.json();
+
+    if (data && data.success) {
+      succes(data.message || d.retour);
+    } else {
+      // Message renvoye par le workflow (deja dans la bonne langue) : "pas
+      // encore trouve, reessayez", etc. Sinon repli reseau.
+      erreur((data && data.message) ? data.message : d.errReseau);
+    }
+  } catch (e) {
+    erreur(d.errReseau);
+  }
+
+  btn.disabled = false;
+  btn.textContent = d.activateBtn;
+}
+
+/* ===================================================================
    DEMARRAGE
    =================================================================== */
 document.getElementById('lang-fr').addEventListener('click', function(){ lang = 'fr'; appliquerLangue(); });
 document.getElementById('lang-en').addEventListener('click', function(){ lang = 'en'; appliquerLangue(); });
 document.getElementById('pay-btn').addEventListener('click', payer);
+document.getElementById('activate-btn').addEventListener('click', activer);
 document.getElementById('email').addEventListener('input', effacerErreur);
 
 // Retour depuis la page de paiement CinetPay.
@@ -333,7 +439,19 @@ if (/[?&]retour=1(&|$)/.test(window.location.search)) {
 // s'adresse d'abord au marche ouest-africain francophone.
 if (/^en/i.test(navigator.language || '')) lang = 'en';
 
+// Retour depuis Chariow (lien du message de livraison : ?activer=unite|pack10|pack30).
+// On presente le pack et on invite a activer. Le pack reel credite reste
+// celui de la vraie vente cote workflow, ce parametre ne sert qu'a l'affichage.
+const mActiver = (window.location.search || '').match(/[?&]activer=(unite|pack10|pack30)/);
+if (mActiver) { choisie = mActiver[1]; }
+
 appliquerLangue();
+
+if (mActiver) {
+  succes(t().activateReturn);
+  const champ = document.getElementById('email');
+  if (champ) champ.focus();
+}
 </script>
 </body>
 </html>
