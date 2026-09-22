@@ -21,7 +21,7 @@
     -webkit-font-smoothing:antialiased;
   }
   .page{max-width:900px;margin:0 auto;padding:22px 20px 32px;}
-  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;}
+  .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;background:var(--paper);padding:14px 0 10px;border-bottom:1px solid var(--border);}
   .brand{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--navy);}
   .brand .x{color:var(--accent);}
   .top-right{display:flex;align-items:center;gap:14px;}
@@ -143,14 +143,6 @@
     <div class="activate">
       <p><b data-i18n="activateTitle">Déjà payé sur Chariow ?</b> <span data-i18n="activateSub">Saisissez ci-dessus l'adresse email utilisée pour le paiement, puis activez vos crédits.</span></p>
       <button class="btn btn-ghost" id="activate-btn" data-i18n="activateBtn">Activer mes crédits</button>
-    </div>
-
-    <div class="channels">
-      <span data-i18n="lblChannels">Moyens acceptés :</span>
-      <span class="chip">Orange Money</span>
-      <span class="chip">MTN MoMo</span>
-      <span class="chip">Moov Money</span>
-      <span class="chip">Wave</span>
     </div>
 
     <div class="note">
