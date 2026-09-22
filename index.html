@@ -7,7 +7,7 @@
 <meta name="description" content="Get an Upwork job assessed before spending your connects: compatibility score, red flags, contract strategy and a ready-to-paste cover letter, based on your CV.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#0D3B66; --navy-deep:#0A2C4E; --accent:#2A78D6; --amber:#B5590B;
@@ -18,17 +18,17 @@
   html{scroll-behavior:smooth;}
   body{
     margin:0; background:var(--paper); color:var(--ink);
-    font-family:'Inter',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.5;
+    font-family:'Nunito',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
   .page{max-width:900px;margin:0 auto;padding:22px 20px 32px;}
   .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:12px;flex-wrap:wrap;}
-  .brand{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--navy);}
+  .brand{font-family:'Nunito',sans-serif;font-weight:600;font-size:15px;color:var(--navy);}
   .brand .x{color:var(--accent);}
   .top-right{display:flex;align-items:center;gap:14px;}
   .top small{color:var(--muted);font-size:12.5px;}
 
-  .lang-switch{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
+  .lang-switch{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:'Nunito',sans-serif;font-size:11.5px;}
   .lang-switch button{border:none;background:#fff;color:var(--muted);padding:6px 12px;cursor:pointer;font-family:inherit;font-size:inherit;}
   .lang-switch button.active{background:var(--navy);color:#fff;}
 
@@ -39,24 +39,24 @@
   }
 
   .stepper{display:flex;align-items:center;gap:10px;margin-bottom:18px;
-    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+    font-family:'Nunito',sans-serif;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
   .stepper .line{flex:1;height:1px;background:var(--border);}
   .stepper .step{white-space:nowrap;}
   .stepper .step.active{color:var(--navy);font-weight:600;}
   .stepper .step.done{color:var(--green);}
 
-  .eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;
+  .eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:'Nunito',sans-serif;
     font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);
     background:rgba(27,122,61,.08);padding:4px 10px;border-radius:999px;margin-bottom:10px;}
-  h1{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(23px,3vw,29px);
+  h1{font-family:'Nunito',sans-serif;font-weight:600;font-size:clamp(23px,3vw,29px);
     line-height:1.15;color:var(--navy);margin:0 0 8px;}
   .sub{color:var(--muted);font-size:14.5px;max-width:62ch;margin:0 0 18px;}
 
   .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px;}
   @media (max-width:720px){.plans{grid-template-columns:1fr;}}
   .plan-card{border:1px solid var(--border);border-radius:var(--radius);padding:17px 18px;background:var(--paper);display:flex;flex-direction:column;}
-  .plan-card .ptag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;}
-  .plan-card h3{font-family:'Space Grotesk',sans-serif;font-size:17px;color:var(--navy);margin:0 0 3px;}
+  .plan-card .ptag{font-family:'Nunito',sans-serif;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;}
+  .plan-card h3{font-family:'Nunito',sans-serif;font-size:17px;color:var(--navy);margin:0 0 3px;}
   .plan-card .price{font-size:15px;color:var(--navy);font-weight:600;margin:0 0 7px;}
   .plan-card .desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 13px;flex:1;}
   .plan-card .btn{width:100%;justify-content:center;background:var(--accent);color:#fff;font-size:14px;
@@ -68,7 +68,7 @@
   .plans-note{font-size:12px;color:var(--muted);margin:10px 0 0;}
   .plan-card.best{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
 
-  .qtag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:16px;}
+  .qtag{font-family:'Nunito',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:16px;}
   .qtag.two{color:var(--amber);}
 
   .selected-plan-recap{display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -83,11 +83,11 @@
     padding:8px 10px;border-radius:0 6px 6px 0;margin:0 0 8px;}
   .qgrid select{
     width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);
-    font-size:14.5px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
+    font-size:14.5px;font-family:'Nunito',sans-serif;background:#fff;color:var(--ink);
   }
   .qgrid input[type=text], .qgrid input[type=url], .qgrid input[type=email], .qgrid textarea{
     width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);
-    font-size:14.5px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
+    font-size:14.5px;font-family:'Nunito',sans-serif;background:#fff;color:var(--ink);
   }
   .qgrid textarea{resize:vertical;min-height:130px;}
   .qgrid input:focus-visible, .qgrid textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px;}
@@ -106,7 +106,7 @@
 
   .qform-actions{margin-top:8px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 
-  .btn{font-family:'Inter',sans-serif;font-weight:600;font-size:15px;border:none;cursor:pointer;
+  .btn{font-family:'Nunito',sans-serif;font-weight:600;font-size:15px;border:none;cursor:pointer;
     border-radius:10px;padding:14px 30px;display:inline-flex;align-items:center;gap:8px;
     text-decoration:none;transition:transform .15s ease,background .15s ease;}
   .btn:hover{transform:translateY(-1px);}
@@ -154,7 +154,7 @@
   .btn-disabled{background:var(--muted) !important;cursor:not-allowed !important;
     opacity:.55;transform:none !important;pointer-events:none;}
   .result-box{border:1px solid var(--border);border-radius:var(--radius);padding:26px;background:var(--paper);text-align:center;}
-  .result-box .file-title{font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--navy);font-weight:600;margin:0 0 6px;word-break:break-word;}
+  .result-box .file-title{font-family:'Nunito',sans-serif;font-size:18px;color:var(--navy);font-weight:600;margin:0 0 6px;word-break:break-word;}
   .result-box .file-meta{font-size:12.5px;color:var(--muted);margin:0 0 20px;}
   .payment-area{margin-top:22px;padding-top:22px;border-top:1px solid var(--border);display:none;}
   .payment-area.show{display:block;}
@@ -162,7 +162,7 @@
   .payment-area a.btn:hover{background:var(--navy);}
 
   .sample{margin-top:14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden;}
-  .sample summary{cursor:pointer;padding:13px 18px;font-family:'Space Grotesk',sans-serif;font-weight:600;
+  .sample summary{cursor:pointer;padding:13px 18px;font-family:'Nunito',sans-serif;font-weight:600;
     font-size:15px;color:var(--navy);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;}
   .sample summary::-webkit-details-marker{display:none;}
   .sample summary::after{content:'+';font-size:20px;color:var(--accent);font-weight:400;}
@@ -172,10 +172,10 @@
   .sample-intro{font-size:13.5px;color:var(--muted);line-height:1.6;margin:16px 0 18px;}
   .sample-doc{border:1px solid var(--border);border-radius:10px;background:var(--paper);padding:20px;
     max-height:460px;overflow-y:auto;font-size:13.5px;line-height:1.6;color:var(--ink);}
-  .sample-doc h4{font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:15px;
+  .sample-doc h4{font-family:'Nunito',sans-serif;color:var(--navy);font-size:15px;
     margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--navy);}
   .sample-doc h4:first-child{margin-top:0;}
-  .sample-doc h5{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+  .sample-doc h5{font-family:'Nunito',sans-serif;font-size:10.5px;letter-spacing:.06em;
     text-transform:uppercase;margin:14px 0 5px;}
   .sample-doc ul{margin:0 0 12px;padding-left:18px;}
   .sample-doc li{margin-bottom:5px;}
@@ -203,7 +203,7 @@
     padding:14px 16px;cursor:pointer;font-family:inherit;transition:border-color .15s,background .15s;}
   .type-card:hover{border-color:var(--accent);}
   .type-card.active{border-color:var(--navy);background:#F2F7FD;}
-  .type-card b{display:block;font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14.5px;margin-bottom:3px;}
+  .type-card b{display:block;font-family:'Nunito',sans-serif;color:var(--navy);font-size:14.5px;margin-bottom:3px;}
   .type-card span{display:block;color:var(--muted);font-size:12.5px;line-height:1.45;}
   @media(max-width:700px){.type-picker{grid-template-columns:1fr;}}
   .tc-scam{background:rgba(168,50,42,.09);border:2px solid #A8322A;border-radius:10px;
@@ -212,7 +212,7 @@
   .tc-warn{background:rgba(181,89,11,.09);border-left:4px solid var(--amber);border-radius:0 8px 8px 0;
     padding:11px 13px;margin:0 0 12px;font-size:13px;line-height:1.55;color:var(--ink);}
   .type-confirm{background:#F5F8FC;border:1px solid #E1E8F0;border-radius:12px;padding:18px 20px;margin:0 0 16px;text-align:left;}
-  .type-confirm .tc-title{font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:15px;font-weight:700;margin:0 0 4px;}
+  .type-confirm .tc-title{font-family:'Nunito',sans-serif;color:var(--navy);font-size:15px;font-weight:700;margin:0 0 4px;}
   .type-confirm .tc-sub{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 14px;}
   .type-confirm label{display:block;font-size:12.5px;font-weight:600;color:var(--navy);margin:0 0 6px;}
   .type-confirm select{width:100%;padding:11px 12px;border:1px solid #CBD8E6;border-radius:9px;
@@ -469,7 +469,7 @@
   </main>
 
 
-  <footer class="foot">Irié Armand Davy TRE BI &nbsp;•&nbsp; Data Analyst &nbsp;•&nbsp; <a href="achat.html" style="color:var(--accent);">Créditer mon compte</a></footer>
+  <footer class="foot">Armand Davy TRE BI &nbsp;•&nbsp; Consultant Data Analyst &nbsp;•&nbsp; <a href="achat.html" style="color:var(--accent);">Créditer mon compte</a></footer>
 </div>
 
 <script>
