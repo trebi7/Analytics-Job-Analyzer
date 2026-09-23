@@ -71,10 +71,6 @@
   }
   .btn:hover:not(:disabled){background:var(--navy);}
   .btn:disabled{opacity:.55;cursor:default;}
-
-  /* Séparateur "ou payer sur Chariow" */
-  .paysep{display:flex;align-items:center;gap:12px;margin:20px 0 2px;color:var(--muted);
-    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;}
   .paysep::before,.paysep::after{content:"";height:1px;background:var(--border);flex:1;}
   .btn-chariow{background:var(--navy);}
   .btn-chariow:hover:not(:disabled){background:var(--navy-deep);}
@@ -135,9 +131,6 @@
     <p class="field-hint" data-i18n="hintEmail">Vos crédits sont rattachés à cette adresse. Utilisez exactement la même dans le formulaire d'analyse.</p>
     <input type="email" id="email" autocomplete="email" placeholder="vous@exemple.com">
 
-    <button class="btn" id="pay-btn" data-i18n="btn">Payer par Mobile Money</button>
-
-    <div class="paysep"><span data-i18n="orPay">ou payer sur Chariow</span></div>
     <a class="btn btn-chariow" id="chariow-btn" href="#" target="_blank" rel="noopener" data-i18n="chariowBtn">Payer sur Chariow</a>
 
     <div class="activate">
@@ -163,11 +156,6 @@
 /* ===================================================================
    CONFIGURATION
    =================================================================== */
-// Webhook n8n qui cree le lien de paiement CinetPay et le renvoie ici.
-// Le corps part en text/plain pour eviter la requete preflight CORS que le
-// noeud Webhook ne traite pas ; n8n parse le JSON cote serveur.
-const CREATE_PAYMENT_URL = "https://davy77.app.n8n.cloud/webhook/creer-paiement";
-
 // Webhook n8n qui verifie une vente Chariow deja payee et credite le compte.
 // Chariow heberge sa propre page de paiement (liens ci-dessous) ; apres le
 // paiement, le client revient et clique "Activer mes credits".
@@ -181,9 +169,8 @@ const CHARIOW_URLS = {
   pack30: "https://ymkecnxg.mychariow.com/prd_opnlzgiu"
 };
 
-// Affichage uniquement. Les montants qui font foi sont ceux du noeud
-// "Configuration paiement" dans n8n : c'est lui qui fixe le prix envoye a
-// CinetPay et le nombre de credits accordes a la confirmation.
+// Affichage uniquement. Le nombre de credits accorde fait foi cote workflow
+// selon l'id produit Chariow (peu importe le prix affiche ici).
 const OFFRES = [
   { code:'unite',  montant:2500,  credits:1  },
   { code:'pack10', montant:7500,  credits:10, best:true },
@@ -201,8 +188,6 @@ const T = {
     sub:"Une analyse vous dit en quelques minutes si une offre vaut votre candidature, ce qui cloche dedans, et vous rend une lettre prête à envoyer. Les crédits n'expirent pas.",
     lblEmail:"Adresse email",
     hintEmail:"Vos crédits sont rattachés à cette adresse. Utilisez exactement la même dans le formulaire d'analyse.",
-    btn:"Payer par Mobile Money",
-    btnWait:"Création du lien de paiement…",
     lblChannels:"Moyens acceptés :",
     noteTitle:"Après le paiement.",
     noteBody:"Vous recevez un email de confirmation et vos crédits sont actifs immédiatement. Retournez sur le formulaire d'analyse, saisissez la même adresse, et le paiement ne vous sera plus demandé tant qu'il vous reste des crédits.",
@@ -220,7 +205,6 @@ const T = {
     errOffre:"Choisissez d'abord une offre.",
     errReseau:"Impossible de joindre le service de paiement. Vérifiez votre connexion et réessayez.",
     retour:"Merci. Si votre paiement est passé, vos crédits sont déjà actifs et un email de confirmation vous attend. Retournez au formulaire d'analyse avec la même adresse email.",
-    orPay:"ou payer sur Chariow",
     chariowBtn:"Payer sur Chariow",
     activateTitle:"Déjà payé sur Chariow ?",
     activateSub:"Saisissez ci-dessus l'adresse email utilisée pour le paiement, puis activez vos crédits.",
@@ -235,8 +219,6 @@ const T = {
     sub:"An analysis tells you in minutes whether a job is worth applying to, what is wrong with it, and hands you a ready-to-send cover letter. Credits never expire.",
     lblEmail:"Email address",
     hintEmail:"Your credits are tied to this address. Use exactly the same one in the analysis form.",
-    btn:"Pay with Mobile Money",
-    btnWait:"Creating the payment link…",
     lblChannels:"Accepted:",
     noteTitle:"After payment.",
     noteBody:"You get a confirmation email and your credits are active right away. Go back to the analysis form, enter the same address, and you will not be asked to pay again while credits remain.",
@@ -254,7 +236,6 @@ const T = {
     errOffre:"Pick an offer first.",
     errReseau:"The payment service could not be reached. Check your connection and try again.",
     retour:"Thank you. If your payment went through, your credits are already active and a confirmation email is waiting for you. Go back to the analysis form with the same email address.",
-    orPay:"or pay on Chariow",
     chariowBtn:"Pay on Chariow",
     activateTitle:"Already paid on Chariow?",
     activateSub:"Enter above the email address you used for the payment, then activate your credits.",
@@ -335,44 +316,6 @@ function effacerErreur(){
 }
 
 /* ===================================================================
-   PAIEMENT
-   =================================================================== */
-async function payer(){
-  effacerErreur();
-  const d = t();
-  const email = document.getElementById('email').value.trim();
-
-  if (!choisie) { erreur(d.errOffre); return; }
-  if (!/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(email)) { erreur(d.errEmail); return; }
-
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = true;
-  btn.textContent = d.btnWait;
-
-  try {
-    const res = await fetch(CREATE_PAYMENT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ offre: choisie, email: email, ui_lang: lang })
-    });
-    const data = await res.json();
-
-    if (data && data.success && data.payment_url) {
-      // Le client part chez CinetPay. Le credit ne depend pas de son retour :
-      // c'est la notification serveur a serveur qui l'accorde.
-      window.location.href = data.payment_url;
-      return;
-    }
-    erreur((data && data.message) ? data.message : d.errReseau);
-  } catch (e) {
-    erreur(d.errReseau);
-  }
-
-  btn.disabled = false;
-  btn.textContent = d.btn;
-}
-
-/* ===================================================================
    ACTIVATION CHARIOW
    =================================================================== */
 // Apres avoir paye sur Chariow, le client revient et clique "Activer mes
@@ -418,14 +361,8 @@ async function activer(){
    =================================================================== */
 document.getElementById('lang-fr').addEventListener('click', function(){ lang = 'fr'; appliquerLangue(); });
 document.getElementById('lang-en').addEventListener('click', function(){ lang = 'en'; appliquerLangue(); });
-document.getElementById('pay-btn').addEventListener('click', payer);
 document.getElementById('activate-btn').addEventListener('click', activer);
 document.getElementById('email').addEventListener('input', effacerErreur);
-
-// Retour depuis la page de paiement CinetPay.
-if (/[?&]retour=1(&|$)/.test(window.location.search)) {
-  document.getElementById('retour-msg').classList.add('show');
-}
 
 // La langue du navigateur decide, avec le francais par defaut : la page
 // s'adresse d'abord au marche ouest-africain francophone.
