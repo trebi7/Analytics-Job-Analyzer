@@ -920,6 +920,59 @@ Object.keys(MAJ_LANCEMENT).forEach(function (l) {
 function t() { return translations[currentLang]; }
 
 /* ===================================================================
+   EMPREINTE D'APPAREIL
+   Signature technique du navigateur, utilisee avec l'email pour
+   n'accorder qu'une seule analyse offerte par machine. L'adresse MAC
+   n'est pas accessible depuis une page web ; on s'appuie donc sur des
+   caracteristiques d'affichage et de materiel, reduites a un hachage
+   non reversible. Aucune donnee personnelle n'est collectee, et
+   l'empreinte survit au vidage du cache et a la navigation privee.
+   =================================================================== */
+function hachageFNV(str) {
+  var h1 = 0x811c9dc5, h2 = 0x9e3779b9;
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    h1 ^= c; h1 = (h1 * 0x01000193) >>> 0;
+    h2 = (((h2 ^ c) >>> 0) * 0x85ebca6b) >>> 0;
+  }
+  return ('00000000' + h1.toString(16)).slice(-8) + ('00000000' + h2.toString(16)).slice(-8);
+}
+
+function empreinteAppareil() {
+  var p = [];
+  function add(f) { try { p.push(String(f())); } catch (e) { p.push(''); } }
+  add(function () { return screen.width + 'x' + screen.height + 'x' + (screen.colorDepth || 0); });
+  add(function () { return window.devicePixelRatio || ''; });
+  add(function () { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; });
+  add(function () { return new Date().getTimezoneOffset(); });
+  add(function () { return (navigator.languages || [navigator.language || '']).join(','); });
+  add(function () { return navigator.platform || ''; });
+  add(function () { return navigator.hardwareConcurrency || ''; });
+  add(function () { return navigator.deviceMemory || ''; });
+  add(function () { return navigator.maxTouchPoints || ''; });
+  // Rendu graphique : tres discriminant et stable sur une meme machine.
+  add(function () {
+    var c = document.createElement('canvas'); c.width = 220; c.height = 60;
+    var x = c.getContext('2d');
+    x.textBaseline = 'top'; x.font = "16px 'Arial'";
+    x.fillStyle = '#f60'; x.fillRect(0, 0, 120, 20);
+    x.fillStyle = '#069'; x.fillText('Analyse offres 0123', 2, 22);
+    x.strokeStyle = 'rgba(0,80,160,.6)'; x.beginPath(); x.arc(80, 35, 18, 0, Math.PI * 2); x.stroke();
+    return c.toDataURL();
+  });
+  add(function () {
+    var gc = document.createElement('canvas');
+    var gl = gc.getContext('webgl') || gc.getContext('experimental-webgl');
+    if (!gl) return '';
+    var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    if (!dbg) return String(gl.getParameter(gl.VERSION) || '');
+    return String(gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || '') + '~' +
+           String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '');
+  });
+  return hachageFNV(p.join('|'));
+}
+
+/* ===================================================================
    DOCUMENT EXEMPLE — rendu dans la langue active
    =================================================================== */
 const SAMPLE = {
@@ -1523,6 +1576,7 @@ function afficherListeFichiers(prets) {
         job_text: jobText,
         job_type: selectedType,
         job_context: collecterContexte(),
+        device_id: empreinteAppareil(),
         // Renseigne juste apres le pre-controle : permet au serveur de
         // reprendre son verdict au lieu de refaire l'appel au modele.
         precheck_id: ''
