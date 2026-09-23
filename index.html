@@ -105,6 +105,14 @@
   .file-drop.has-file .file-drop-label{color:var(--green);font-weight:600;}
 
   .qform-actions{margin-top:8px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .add-options{background:none;border:none;color:var(--accent);font-family:'Nunito',sans-serif;font-weight:600;font-size:14px;cursor:pointer;padding:6px 0;margin:0 0 14px;display:inline-flex;align-items:center;gap:9px;}
+  .add-options:hover{color:var(--navy);}
+  .add-options .ao-sign{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:rgba(42,120,214,.12);color:var(--accent);font-size:17px;line-height:1;font-weight:600;}
+  .add-options[aria-expanded="true"] .ao-sign{background:rgba(42,120,214,.18);}
+  .offer-tabs{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:12px;}
+  .offer-tab{border:none;background:#fff;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:600;font-size:13px;padding:8px 16px;cursor:pointer;}
+  .offer-tab + .offer-tab{border-left:1px solid var(--border);}
+  .offer-tab.active{background:var(--navy);color:#fff;}
 
   .btn{font-family:'Nunito',sans-serif;font-weight:600;font-size:15px;border:none;cursor:pointer;
     border-radius:10px;padding:14px 30px;display:inline-flex;align-items:center;gap:8px;
@@ -345,11 +353,18 @@
             <label for="job_title" id="lbl-job-title">Titre de l'offre <span class="req">*</span></label>
             <input type="text" id="job_title" name="job_title" required maxlength="200">
           </div>
-          <div>
-            <label for="job_url" id="lbl-job-url">Lien de l'annonce (optionnel)</label>
-            <input type="url" id="job_url" name="job_url" placeholder="https://">
-          </div>
         </div>
+
+        <button type="button" class="add-options" id="toggle-options" aria-expanded="false" aria-controls="extra-options">
+          <span class="ao-sign" id="ao-sign">+</span> <span data-i18n="addOptions">Ajouter des options (optionnel)</span>
+        </button>
+        <div id="extra-options" class="extra-options" style="display:none;">
+          <div class="qgrid">
+            <div>
+              <label for="job_url" id="lbl-job-url">Lien de l'annonce (optionnel)</label>
+              <input type="url" id="job_url" name="job_url" placeholder="https://">
+            </div>
+          </div>
 
         <div class="qgrid" data-type-block="freelance" style="display:none;">
           <div>
@@ -414,11 +429,30 @@
           </div>
         </div>
 
+        </div><!-- /extra-options -->
+
         <div class="qgrid">
           <div>
             <label for="job_text" id="lbl-job-text">Texte complet de l'offre <span class="req">*</span></label>
             <p class="field-hint" id="hint-job-text">Description, budget, compétences demandées, infos client si visibles.</p>
-            <textarea id="job_text" name="job_text" required maxlength="20000"></textarea>
+
+            <div class="offer-tabs" role="tablist">
+              <button type="button" class="offer-tab active" id="tab-paste" data-i18n="tabPaste">Coller le texte</button>
+              <button type="button" class="offer-tab" id="tab-import" data-i18n="tabImport">Importer un fichier</button>
+            </div>
+
+            <div id="pane-paste">
+              <div id="offer-ok-note" class="result-note" role="status" aria-live="polite" style="margin-bottom:12px;"></div>
+              <textarea id="job_text" name="job_text" required maxlength="20000"></textarea>
+            </div>
+
+            <div id="pane-import" style="display:none;">
+              <div class="file-drop" id="offer-drop">
+                <input type="file" id="offer_file" accept=".pdf,.docx,.xls,.xlsx">
+                <div class="file-drop-label" id="offer-drop-label" data-i18n="offerDropLabel">Cliquez ou déposez le fichier de l'offre (PDF, Word ou Excel)</div>
+              </div>
+              <div id="offer-import-note" class="result-note" role="status" aria-live="polite" style="margin-top:12px;"></div>
+            </div>
           </div>
         </div>
 
@@ -767,6 +801,15 @@ const MAJ_LANCEMENT = {
     tcConsultance: "Appel à consultance / termes de référence",
     tcStart: "Lancer l'analyse →",
     tagline: "Zéro candidature à l'aveugle",
+    addOptions: "Ajouter des options (optionnel)",
+    tabPaste: "Coller le texte",
+    tabImport: "Importer un fichier",
+    offerDropLabel: "Cliquez ou déposez le fichier de l'offre (PDF, Word ou Excel)",
+    offerReading: "Lecture du fichier en cours…",
+    offerExtractOk: "✓ Texte extrait — vérifiez-le dans l'onglet « Coller le texte » et corrigez si besoin.",
+    offerExtractEmpty: "Le fichier semble vide ou illisible (PDF scanné ?). Ouvrez-le et copiez-collez le texte dans l'onglet « Coller le texte ».",
+    offerExtractFail: "Lecture automatique impossible. Ouvrez le fichier et copiez-collez le texte dans l'onglet « Coller le texte ».",
+    offerTooBig: "Fichier trop volumineux (8 Mo maximum).",
     h1: "On analyse l'offre avant que tu ne postules.",
     labelProposals: "Nombre de candidatures déjà envoyées (optionnel)",
     proposalsHint: "Ces trois informations, quand elles sont visibles sur l'annonce, rendent le score « chances réelles » nettement plus fiable.",
@@ -846,6 +889,15 @@ const MAJ_LANCEMENT = {
     tcConsultance: "Consultancy call / terms of reference",
     tcStart: "Start the analysis →",
     tagline: "No blind applications",
+    addOptions: "Add options (optional)",
+    tabPaste: "Paste the text",
+    tabImport: "Import a file",
+    offerDropLabel: "Click or drop the job file (PDF, Word or Excel)",
+    offerReading: "Reading the file…",
+    offerExtractOk: "✓ Text extracted — review it in the “Paste the text” tab and edit if needed.",
+    offerExtractEmpty: "The file looks empty or unreadable (scanned PDF?). Open it and paste the text in the “Paste the text” tab.",
+    offerExtractFail: "Couldn't read this file automatically. Open it and paste the text in the “Paste the text” tab.",
+    offerTooBig: "File too large (8 MB maximum).",
     h1: "We analyze the job before you apply.",
     labelProposals: "Applications already sent (optional)",
     proposalsHint: "When the posting shows them, these three make the \u201creal odds\u201d score far more reliable.",
@@ -1227,6 +1279,130 @@ function afficherListeFichiers(prets) {
   });
 
   document.getElementById('change-plan-btn').addEventListener('click', function () { showStep('plans'); });
+
+  var toggleOptionsBtn = document.getElementById('toggle-options');
+  if (toggleOptionsBtn) {
+    toggleOptionsBtn.addEventListener('click', function () {
+      var box = document.getElementById('extra-options');
+      var isHidden = getComputedStyle(box).display === 'none';
+      box.style.display = isHidden ? '' : 'none';
+      this.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      document.getElementById('ao-sign').textContent = isHidden ? '\u2212' : '+';
+    });
+  }
+
+  /* ==================================================================
+     OFFRE : coller le texte OU importer un fichier (PDF, Word, Excel)
+     Le fichier est lu dans le navigateur ; son texte remplit la zone de
+     texte, source unique envoyee au serveur (aucun changement cote n8n).
+     Les librairies d'extraction sont chargees a la demande, au 1er import.
+     ================================================================== */
+  (function () {
+    var tabPaste = document.getElementById('tab-paste');
+    var tabImport = document.getElementById('tab-import');
+    var panePaste = document.getElementById('pane-paste');
+    var paneImport = document.getElementById('pane-import');
+    if (!tabPaste) return;
+    function showPaste(){ tabPaste.classList.add('active'); tabImport.classList.remove('active'); panePaste.style.display=''; paneImport.style.display='none'; }
+    function showImport(){ tabImport.classList.add('active'); tabPaste.classList.remove('active'); paneImport.style.display=''; panePaste.style.display='none'; }
+    tabPaste.addEventListener('click', showPaste);
+    tabImport.addEventListener('click', showImport);
+
+    var CDN = {
+      pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+      pdfWorker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+      mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+      xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+    };
+    var loaded = {};
+    function loadScript(src){
+      if (loaded[src]) return loaded[src];
+      loaded[src] = new Promise(function (res, rej){
+        var sc=document.createElement('script'); sc.src=src;
+        sc.onload=function(){res();}; sc.onerror=function(){rej(new Error('load'));};
+        document.head.appendChild(sc);
+      });
+      return loaded[src];
+    }
+    function readArrayBuffer(file){
+      return new Promise(function (res, rej){
+        var fr=new FileReader();
+        fr.onload=function(){res(fr.result);};
+        fr.onerror=function(){rej(new Error('read'));};
+        fr.readAsArrayBuffer(file);
+      });
+    }
+    async function extractPdf(buf){
+      await loadScript(CDN.pdf);
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = CDN.pdfWorker;
+      var pdf = await window.pdfjsLib.getDocument({data: buf}).promise;
+      var out=[];
+      for (var i=1;i<=pdf.numPages;i++){
+        var page=await pdf.getPage(i);
+        var tc=await page.getTextContent();
+        out.push(tc.items.map(function(it){return it.str;}).join(' '));
+      }
+      return out.join('\n\n');
+    }
+    async function extractDocx(buf){
+      await loadScript(CDN.mammoth);
+      var r = await window.mammoth.extractRawText({arrayBuffer: buf});
+      return r.value || '';
+    }
+    async function extractXlsx(buf){
+      await loadScript(CDN.xlsx);
+      var wb = window.XLSX.read(buf, {type:'array'});
+      return wb.SheetNames.map(function(n){
+        return '== '+n+' ==\n'+window.XLSX.utils.sheet_to_csv(wb.Sheets[n]);
+      }).join('\n\n');
+    }
+
+    var input = document.getElementById('offer_file');
+    var drop = document.getElementById('offer-drop');
+    var dropLabel = document.getElementById('offer-drop-label');
+    var impNote = document.getElementById('offer-import-note');
+    var okNote = document.getElementById('offer-ok-note');
+    function setImp(cls, msg){ impNote.className='result-note show '+cls; impNote.textContent=msg; }
+    function clearImp(){ impNote.className='result-note'; impNote.textContent=''; }
+    function setOk(msg){ okNote.className='result-note show ok'; okNote.textContent=msg; }
+
+    drop.addEventListener('click', function (e){ if (e.target !== input) input.click(); });
+    ['dragover','dragenter'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('has-file'); }); });
+    ['dragleave','dragend','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); if(ev!=='drop') drop.classList.remove('has-file'); }); });
+    drop.addEventListener('drop', function (e){
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]){
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+      }
+    });
+
+    input.addEventListener('change', async function (){
+      var file = input.files && input.files[0];
+      if (!file) return;
+      var name = file.name || '';
+      var ext = (name.split('.').pop() || '').toLowerCase();
+      okNote.className='result-note'; okNote.textContent='';
+      if (file.size > 8*1024*1024){ setImp('err', t().offerTooBig); return; }
+      dropLabel.textContent = name;
+      setImp('pending', t().offerReading);
+      try {
+        var buf = await readArrayBuffer(file);
+        var text = '';
+        if (ext === 'pdf') text = await extractPdf(buf);
+        else if (ext === 'docx') text = await extractDocx(buf);
+        else if (ext === 'xlsx' || ext === 'xls') text = await extractXlsx(buf);
+        else { setImp('err', t().offerExtractFail); return; }
+        text = (text || '').replace(/\u0000/g,'').trim();
+        if (text.length < 40){ setImp('err', t().offerExtractEmpty); return; }
+        document.getElementById('job_text').value = text.slice(0, 20000);
+        clearImp();
+        setOk(t().offerExtractOk);
+        showPaste();
+      } catch (e) {
+        setImp('err', t().offerExtractFail);
+      }
+    });
+  })();
 
   /* ==================================================================
      TYPE D'OFFRE
