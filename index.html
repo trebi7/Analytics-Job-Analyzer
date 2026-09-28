@@ -267,7 +267,7 @@
           <span class="ptag" data-i18n="planUniteTag">POUR COMMENCER</span>
           <h3 data-i18n="planUniteTitle">À l'unité</h3>
           <p class="price" data-i18n="planUnitePrice">2 500 F CFA</p>
-          <p class="desc" data-i18n="planUniteDesc">Une analyse : rapport complet et lettre de motivation comprise.</p>
+          <p class="desc" data-i18n="planUniteDesc">Une analyse : rapport complet, lettre de motivation et plan pour renforcer votre CV.</p>
           <a class="btn" href="achat.html?activer=unite" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
         <div class="plan-card best">
@@ -595,7 +595,7 @@ const translations = {
     startFreeBtn: "Obtenir mon aperçu gratuit →",
     plansIntro: "Après votre analyse offerte, rechargez votre compte. Les crédits n'expirent pas.",
     planUniteTag: "POUR COMMENCER", planUniteTitle: "À l'unité", planUnitePrice: "2 500 F CFA",
-    planUniteDesc: "Une analyse : rapport complet et lettre de motivation comprise.",
+    planUniteDesc: "Une analyse : rapport complet, lettre de motivation et plan pour renforcer votre CV.",
     planPack10Tag: "Le plus pris", planPack10Title: "Pack 10", planPack10Price: "7 500 F CFA",
     planPack10Desc: "Dix analyses. De quoi trier sérieusement une semaine de candidatures.",
     planPack30Tag: "Recherche active", planPack30Title: "Pack 30", planPack30Price: "15 000 F CFA",
@@ -669,7 +669,7 @@ const translations = {
     startFreeBtn: "Get my free preview →",
     plansIntro: "After your free analysis, top up your account. Credits never expire.",
     planUniteTag: "GET STARTED", planUniteTitle: "Single", planUnitePrice: "2,500 F CFA",
-    planUniteDesc: "One analysis: full report and cover letter included.",
+    planUniteDesc: "One analysis: full report, cover letter and a plan to strengthen your CV.",
     planPack10Tag: "Most chosen", planPack10Title: "Pack of 10", planPack10Price: "7,500 F CFA",
     planPack10Desc: "Ten analyses. Enough to properly sort a week of applications.",
     planPack30Tag: "Active search", planPack30Title: "Pack of 30", planPack30Price: "15,000 F CFA",
@@ -1048,6 +1048,32 @@ Armand Tre Bi`,
     hNotes: "Notes d'usage", notes: [
       "La première ligne reprend une contrainte précise de l'annonce : c'est ce qui distingue la proposition des candidatures génériques, indispensable quand trois entretiens sont déjà en cours.",
       "La question finale sert double : elle montre l'expérience et fournit l'information nécessaire pour verrouiller le périmètre avant d'accepter le prix fixe."
+    ],
+    p5: "5. Renforcer votre candidature",
+    p5intro: "Ces suggestions reprennent uniquement ce qui figure déjà dans votre CV. Remplacez chaque [X] par votre propre chiffre : nous n'en inventons aucun.",
+    p5a: "Pour cette offre, avant d'envoyer",
+    hGain: "Effet estimé sur vos chances", gainAvant: "34 %", gainApres: "39 %",
+    gainTxt: "Ici, le frein principal est la concurrence déjà avancée, pas le CV. Montrer vos suivis Excel en formules natives vous place devant les profils génériques, sans faire de miracle.",
+    hReec: "Lignes du CV à réécrire", lAvant: "Aujourd'hui", lApres: "Proposition", lWhy: "Pourquoi :",
+    reec: [
+      { prio: "Priorité haute", sec: "Profil Upwork : titre", avant: "Data Analyst | Power BI | Excel | Python",
+        apres: "Tableaux de bord Excel et Power BI pour le suivi d'activité, en formules natives et sans macros",
+        why: "Le client exige « native Excel formulas only ». Le titre actuel met Python en avant, ce qui ne sert pas cette offre." },
+      { prio: "Priorité haute", sec: "Expérience : Jhpiego, projet RISE", avant: "Développement de tableaux de bord de suivi des indicateurs",
+        apres: "Conçu [X] tableaux de suivi (statuts, échéances, alertes de retard) consultés chaque mois par [X] responsables non techniques",
+        why: "L'offre parle de « key dates » et d'« overdue actions ». Votre expérience couvre ce besoin, mais la ligne ne le dit pas." }
+    ],
+    hMots: "Les mots de l'offre face à votre CV", thMots: ["Terme de l'offre", "Dans votre CV", "Où l'ajouter"],
+    mots: [
+      ["native formulas", "Expérience là, mot absent", "Titre et résumé", "#B5590B"],
+      ["renewal windows", "Non prouvé", "-", "#A8322A"],
+      ["dashboard", "Présent", "Déjà en place", "#1B7A3D"]
+    ],
+    p5b: "Pour vos prochaines candidatures",
+    hLac: "Ce qui vous manque pour ce type de mission",
+    lac: [
+      { c: "Un classeur Excel visible avant tout échange", e: "Sur Upwork, un client qui cherche un tableau de bord Excel veut en voir un avant de répondre.",
+        a: "Publier dans le portfolio Upwork un suivi de contrats fictif en formules natives (statuts, renouvellements, alertes), avec une capture et le fichier.", f: "Effort : quelques heures" }
     ]
   },
   en: {
@@ -1120,6 +1146,32 @@ Armand Tre Bi`,
     hNotes: "Usage notes", notes: [
       "The opening line picks up a precise constraint from the posting: that is what separates this from generic proposals, which matters when three interviews are already running.",
       "The closing question does double duty: it signals experience and gathers what is needed to lock the scope before accepting a fixed price."
+    ],
+    p5: "5. Strengthen your application",
+    p5intro: "These suggestions only use what is already in your CV. Replace each [X] with your own figure: we never make one up.",
+    p5a: "For this job, before you apply",
+    hGain: "Estimated effect on your chances", gainAvant: "34 %", gainApres: "39 %",
+    gainTxt: "Here the main obstacle is how far the competition already is, not the CV. Showing your native-formula Excel trackers puts you ahead of generic profiles, no more than that.",
+    hReec: "CV lines to rewrite", lAvant: "Today", lApres: "Suggested", lWhy: "Why:",
+    reec: [
+      { prio: "High priority", sec: "Upwork profile: headline", avant: "Data Analyst | Power BI | Excel | Python",
+        apres: "Excel and Power BI dashboards for activity tracking, built with native formulas and no macros",
+        why: "The client requires \"native Excel formulas only\". The current headline leads with Python, which does not help here." },
+      { prio: "High priority", sec: "Experience: Jhpiego, RISE project", avant: "Built dashboards to track indicators",
+        apres: "Built [X] tracking dashboards (status, deadlines, overdue alerts) used monthly by [X] non-technical managers",
+        why: "The posting mentions \"key dates\" and \"overdue actions\". Your experience covers that need, but the line does not say so." }
+    ],
+    hMots: "Job keywords vs your CV", thMots: ["Job term", "In your CV", "Where to add it"],
+    mots: [
+      ["native formulas", "Experience there, word missing", "Headline and summary", "#B5590B"],
+      ["renewal windows", "Not shown", "-", "#A8322A"],
+      ["dashboard", "Present", "Already there", "#1B7A3D"]
+    ],
+    p5b: "For your next applications",
+    hLac: "What you are missing for this kind of job",
+    lac: [
+      { c: "An Excel workbook clients can see upfront", e: "On Upwork, a client looking for an Excel dashboard wants to see one before replying.",
+        a: "Add a sample contract tracker built with native formulas (status, renewals, alerts) to your Upwork portfolio, with a screenshot and the file.", f: "Effort: a few hours" }
     ]
   }
 };
@@ -1168,6 +1220,38 @@ function renderSample() {
   h += '<h4>' + esc(s.p4) + '</h4>';
   h += '<div class="sample-letter">' + esc(s.letter) + '</div>';
   h += h5(s.hNotes, '#5B6B7C') + ul(s.notes);
+
+  // Partie 5 : renforcer la candidature
+  if (s.p5) {
+    h += '<h4>' + esc(s.p5) + '</h4>';
+    h += '<p style="color:#5B6B7C;font-style:italic;font-size:13px;">' + esc(s.p5intro) + '</p>';
+    h += '<p style="color:#0D3B66;font-weight:700;margin-top:14px;">' + esc(s.p5a) + '</p>';
+    h += '<div style="background:#F5F8FC;border:1px solid #E1E8F0;border-radius:10px;padding:12px 16px;margin:8px 0 14px;">' +
+      '<div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#1B7A3D;">' + esc(s.hGain) + '</div>' +
+      '<div style="font-size:20px;font-weight:700;margin:4px 0;">' + esc(s.gainAvant) + ' <span style="color:#5B6B7C;font-weight:400;">&rarr;</span> <span style="color:#1B7A3D;">' + esc(s.gainApres) + '</span></div>' +
+      '<div style="font-size:13.5px;">' + esc(s.gainTxt) + '</div></div>';
+    h += h5(s.hReec, '#2A78D6');
+    h += s.reec.map(r =>
+      '<div style="border:1px solid #E1E8F0;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#fff;">' +
+        '<div style="font-size:12px;margin-bottom:8px;"><span style="background:#0D3B66;color:#fff;font-weight:700;font-size:11px;padding:2px 9px;border-radius:999px;margin-right:6px;">' + esc(r.prio) + '</span><span style="color:#5B6B7C;">' + esc(r.sec) + '</span></div>' +
+        '<div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:#5B6B7C;">' + esc(s.lAvant) + '</div>' +
+        '<div style="color:#5B6B7C;font-size:13.5px;margin-bottom:8px;">' + esc(r.avant) + '</div>' +
+        '<div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:#1B7A3D;">' + esc(s.lApres) + '</div>' +
+        '<div style="border-left:4px solid #1B7A3D;background:rgba(27,122,61,.06);padding:8px 12px;border-radius:0 8px 8px 0;font-weight:700;margin-bottom:8px;">' + esc(r.apres) + '</div>' +
+        '<div style="font-size:13px;"><span style="color:#5B6B7C;">' + esc(s.lWhy) + ' </span>' + esc(r.why) + '</div>' +
+      '</div>').join('');
+    h += h5(s.hMots, '#2A78D6');
+    h += '<table class="sample-table"><tr>' + s.thMots.map(t => '<th>' + esc(t) + '</th>').join('') + '</tr>' +
+      s.mots.map(m => '<tr><td><b>' + esc(m[0]) + '</b></td><td style="color:' + m[3] + ';font-weight:700;">' + esc(m[1]) + '</td><td>' + esc(m[2]) + '</td></tr>').join('') + '</table>';
+    h += '<p style="color:#0D3B66;font-weight:700;margin-top:16px;">' + esc(s.p5b) + '</p>';
+    h += h5(s.hLac, '#B5590B');
+    h += s.lac.map(l =>
+      '<div style="border-left:4px solid #B5590B;background:rgba(181,89,11,.06);padding:10px 14px;border-radius:0 8px 8px 0;margin:0 0 10px;">' +
+        '<div style="font-weight:700;">' + esc(l.c) + '</div>' +
+        '<div style="font-size:13.5px;margin:4px 0;">' + esc(l.e) + '</div>' +
+        '<div style="font-size:13.5px;">' + esc(l.a) + '</div>' +
+        '<div style="font-size:12.5px;color:#5B6B7C;margin-top:4px;">' + esc(l.f) + '</div></div>').join('');
+  }
 
   el.innerHTML = h;
 }
