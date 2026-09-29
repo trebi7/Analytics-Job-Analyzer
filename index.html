@@ -312,6 +312,9 @@
         <button type="button" class="change-plan-btn" id="change-plan-btn" data-i18n="changePlanBtn">Changer de formule</button>
       </div>
 
+      <!-- Affiche au retour de achat.html, une fois les credits Chariow actives -->
+      <div class="launch-note" id="credits-banner" role="status" style="display:none;"></div>
+
       <span class="qtag" data-i18n="typeTag">◆ De quel type d'offre s'agit-il ?</span>
       <p class="sub" style="margin:-8px 0 18px;font-size:14px;" data-i18n="typeHint">Le formulaire et le rapport s'adaptent au type choisi. Le service vérifie ensuite ce choix à partir du texte de l'offre.</p>
       <div class="type-picker" id="type-picker">
@@ -931,6 +934,29 @@ Object.keys(MAJ_LANCEMENT).forEach(function (l) {
   Object.assign(translations[l], MAJ_LANCEMENT[l]);
 });
 
+/* ===================================================================
+   RETOUR APRES ACTIVATION DES CREDITS (achat.html -> index.html)
+   {n} = nombre d'analyses, {email} = adresse, {pack} = nom du pack
+   =================================================================== */
+const TXT_CREDITS = {
+  fr: {
+    bannerTitle: "Paiement confirmé.",
+    bannerN: function (n) { return n === 1 ? "1 analyse est active" : n + " analyses sont actives"; },
+    bannerBody: "{n} sur {email}. Un email de confirmation vient de vous être envoyé. Remplissez la fiche ci-dessous avec cette même adresse pour recevoir le rapport complet.",
+    bannerGeneric: "Vos crédits sont actifs et un email de confirmation vous a été envoyé. Remplissez la fiche ci-dessous avec l'adresse utilisée pour le paiement pour recevoir le rapport complet.",
+    packs: { unite: "Analyse à l'unité", pack10: "Pack 10", pack30: "Pack 30", pack: "Pack" },
+    planLabel: "{pack} (rapport complet)"
+  },
+  en: {
+    bannerTitle: "Payment confirmed.",
+    bannerN: function (n) { return n === 1 ? "1 analysis is active" : n + " analyses are active"; },
+    bannerBody: "{n} on {email}. A confirmation email has just been sent to you. Fill in the form below with this same address to get the full report.",
+    bannerGeneric: "Your credits are active and a confirmation email has been sent to you. Fill in the form below with the address you paid with to get the full report.",
+    packs: { unite: "Single analysis", pack10: "Pack of 10", pack30: "Pack of 30", pack: "Pack" },
+    planLabel: "{pack} (full report)"
+  }
+};
+
 function t() { return translations[currentLang]; }
 
 /* ===================================================================
@@ -1278,6 +1304,7 @@ let reportData = null;      // rapport recu du serveur
 let pendingRequest = null;  // demande en cours d'envoi
 let selectedFileName = null;
 let analyseEnCours = false;  // verrou : empeche plusieurs analyses simultanees
+let creditsActifs = null;    // { email, offre, credits } au retour de achat.html
 
 /* ===================================================================
    UTILITAIRES
@@ -1402,6 +1429,7 @@ function afficherListeFichiers(prets) {
     // Le nom du fichier choisi etait ecrase par la traduction du libelle.
     if (selectedFileName) fileDropLabel.textContent = selectedFileName;
     if (selectedPlan) updatePlanRecap();
+    afficherBandeauCredits();
     if (selectedType) appliquerType();
     if (reportData) {
       document.getElementById('result-title').textContent =
@@ -1430,7 +1458,33 @@ function afficherListeFichiers(prets) {
   }
 
   function updatePlanRecap() {
-    document.getElementById('selected-plan-label').textContent = t().planFreeLabel;
+    const label = document.getElementById('selected-plan-label');
+    if (creditsActifs) {
+      const tc = TXT_CREDITS[currentLang];
+      label.textContent = tc.planLabel.replace('{pack}', tc.packs[creditsActifs.offre] || tc.packs.pack);
+      return;
+    }
+    label.textContent = t().planFreeLabel;
+  }
+
+  // Bandeau vert en tete de la fiche : confirme l'activation et rappelle
+  // d'utiliser la meme adresse. Construit en DOM (textContent) car l'email
+  // vient du navigateur.
+  function afficherBandeauCredits() {
+    const box = document.getElementById('credits-banner');
+    if (!box) return;
+    if (!creditsActifs) { box.style.display = 'none'; return; }
+    const tc = TXT_CREDITS[currentLang];
+    box.textContent = '';
+    const titre = document.createElement('b');
+    titre.textContent = tc.bannerTitle + ' ';
+    box.appendChild(titre);
+    const n = creditsActifs.credits;
+    const texte = (n > 0 && creditsActifs.email)
+      ? tc.bannerBody.replace('{n}', tc.bannerN(n)).replace('{email}', creditsActifs.email)
+      : tc.bannerGeneric;
+    box.appendChild(document.createTextNode(texte));
+    box.style.display = '';
   }
 
   document.querySelectorAll('[data-plan]').forEach(function (btn) {
@@ -1996,7 +2050,53 @@ function afficherListeFichiers(prets) {
     lancerAnalyse();
   });
 
+  // ------------------------------------------------------------------
+  // RETOUR DEPUIS achat.html (?credits=actifs) : le client vient d'activer
+  // ses credits Chariow. On ouvre directement la fiche (etape 2), avec son
+  // email pre-rempli et le bandeau de confirmation. Les credits eux-memes
+  // restent verifies cote serveur a l'envoi de l'analyse.
+  // ------------------------------------------------------------------
+  let ouvrirFiche = false;
+  (function () {
+    const qs = window.location.search || '';
+    if (!/[?&]credits=actifs(&|$)/.test(qs)) return;
+    ouvrirFiche = true;
+
+    let info = null;
+    try { info = JSON.parse(sessionStorage.getItem('credits_actives') || 'null'); } catch (e) { info = null; }
+    // Une activation de plus de 30 minutes n'est plus reprise.
+    if (info && (!info.t || Date.now() - info.t > 30 * 60 * 1000)) info = null;
+
+    const offres = ['unite', 'pack10', 'pack30'];
+    creditsActifs = {
+      email: info && typeof info.email === 'string' ? info.email.slice(0, 200) : '',
+      offre: info && offres.indexOf(info.offre) !== -1 ? info.offre : 'pack',
+      credits: info ? Math.max(0, parseInt(info.credits, 10) || 0) : 0
+    };
+    selectedPlan = creditsActifs.offre;
+
+    const mLang = qs.match(/[?&]lang=(fr|en)(&|$)/);
+    if (mLang) currentLang = mLang[1];
+    else if (info && (info.lang === 'fr' || info.lang === 'en')) currentLang = info.lang;
+
+    // Nettoyage : un rechargement ne rejoue pas le retour.
+    try { sessionStorage.removeItem('credits_actives'); } catch (e) {}
+    try {
+      const reste = qs.replace(/^\?/, '').split('&').filter(function (p) {
+        return p && !/^(credits|lang)=/.test(p);
+      }).join('&');
+      history.replaceState(null, '', window.location.pathname + (reste ? '?' + reste : '') + window.location.hash);
+    } catch (e) {}
+  })();
+
   applyLanguage(currentLang);
+
+  if (ouvrirFiche) {
+    const champEmail = document.getElementById('contact_email');
+    if (champEmail && creditsActifs && creditsActifs.email && !champEmail.value) champEmail.value = creditsActifs.email;
+    updatePlanRecap();
+    showStep('form');
+  }
 }
 </script>
 </body>

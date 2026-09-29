@@ -140,7 +140,7 @@
 
     <div class="note">
       <b data-i18n="noteTitle">Après le paiement.</b>
-      <span data-i18n="noteBody">Vous recevez un email de confirmation et vos crédits sont actifs immédiatement. Retournez sur le formulaire d'analyse, saisissez la même adresse, et vous recevrez le rapport complet tant qu'il vous reste des crédits.</span>
+      <span data-i18n="noteBody">Cliquez sur « Activer mes crédits » : vous recevez un email de confirmation et la fiche d'analyse s'ouvre aussitôt, avec votre adresse déjà remplie. Le rapport complet vous est livré tant qu'il vous reste des crédits.</span>
     </div>
 
   </main>
@@ -190,7 +190,7 @@ const T = {
     hintEmail:"Vos crédits sont rattachés à cette adresse. Utilisez exactement la même dans le formulaire d'analyse.",
     lblChannels:"Moyens acceptés :",
     noteTitle:"Après le paiement.",
-    noteBody:"Vous recevez un email de confirmation et vos crédits sont actifs immédiatement. Retournez sur le formulaire d'analyse, saisissez la même adresse, et vous recevrez le rapport complet tant qu'il vous reste des crédits.",
+    noteBody:"Cliquez sur « Activer mes crédits » : vous recevez un email de confirmation et la fiche d'analyse s'ouvre aussitôt, avec votre adresse déjà remplie. Le rapport complet vous est livré tant qu'il vous reste des crédits.",
     backLink:"Revenir au formulaire d'analyse",
     names:{ unite:"À l'unité", pack10:"Pack 10", pack30:"Pack 30" },
     tags:{ unite:"Pour essayer", pack10:"Le plus pris", pack30:"Recherche active" },
@@ -210,7 +210,10 @@ const T = {
     activateSub:"Saisissez ci-dessus l'adresse email utilisée pour le paiement, puis activez vos crédits.",
     activateBtn:"Activer mes crédits",
     activateWait:"Vérification du paiement…",
-    activateReturn:"Vous revenez de Chariow. Saisissez l'adresse email utilisée pour payer, puis cliquez « Activer mes crédits »."
+    activateReturn:"Vous revenez de Chariow. Saisissez l'adresse email utilisée pour payer, puis cliquez « Activer mes crédits ».",
+    activateOk:function(n, email){ return "Paiement confirmé : " + (n === 1 ? "1 analyse est active" : n + " analyses sont actives") + " sur " + email + ". Un email de confirmation vient de vous être envoyé."; },
+    openingForm:"La fiche d'analyse s'ouvre…",
+    openFormNow:"Ouvrir la fiche maintenant"
   },
   en: {
     tagline:"No more blind applications",
@@ -221,7 +224,7 @@ const T = {
     hintEmail:"Your credits are tied to this address. Use exactly the same one in the analysis form.",
     lblChannels:"Accepted:",
     noteTitle:"After payment.",
-    noteBody:"You get a confirmation email and your credits are active right away. Go back to the analysis form, enter the same address, and you will get the full report while credits remain.",
+    noteBody:"Click \"Activate my credits\": you get a confirmation email and the analysis form opens right away, with your address already filled in. You get the full report as long as you have credits left.",
     backLink:"Back to the analysis form",
     names:{ unite:"Single", pack10:"Pack of 10", pack30:"Pack of 30" },
     tags:{ unite:"To try it", pack10:"Most chosen", pack30:"Active search" },
@@ -241,7 +244,10 @@ const T = {
     activateSub:"Enter above the email address you used for the payment, then activate your credits.",
     activateBtn:"Activate my credits",
     activateWait:"Checking your payment…",
-    activateReturn:"You're back from Chariow. Enter the email address you paid with, then click \"Activate my credits\"."
+    activateReturn:"You're back from Chariow. Enter the email address you paid with, then click \"Activate my credits\".",
+    activateOk:function(n, email){ return "Payment confirmed: " + (n === 1 ? "1 analysis is active" : n + " analyses are active") + " on " + email + ". A confirmation email has just been sent to you."; },
+    openingForm:"Opening the analysis form…",
+    openFormNow:"Open the form now"
   }
 };
 
@@ -342,7 +348,36 @@ async function activer(){
     const data = await res.json();
 
     if (data && data.success) {
-      succes(data.message || d.retour);
+      // Credits actives : on confirme ici, puis on ouvre la fiche d'analyse
+      // (etape 2 de index.html) avec l'email pre-rempli. Le passage se fait
+      // par sessionStorage (meme origine trebi7.github.io) pour ne pas mettre
+      // l'adresse dans l'URL.
+      const n = Math.max(0, parseInt(data.credits, 10) || 0);
+      const offre = /^(unite|pack10|pack30)$/.test(data.offre || '') ? data.offre : choisie;
+      try {
+        sessionStorage.setItem('credits_actives', JSON.stringify({
+          email: email, offre: offre, credits: n, lang: lang, t: Date.now()
+        }));
+      } catch (e) { /* stockage bloque : la fiche s'ouvre sans pre-remplissage */ }
+
+      const cible = 'index.html?credits=actifs&lang=' + lang;
+      succes(n > 0 ? d.activateOk(n, email) : (data.message || d.retour));
+      const box = document.getElementById('ok-msg');
+      const suite = document.createElement('div');
+      suite.style.marginTop = '8px';
+      suite.appendChild(document.createTextNode(d.openingForm + ' '));
+      const lien = document.createElement('a');
+      lien.href = cible;
+      lien.textContent = d.openFormNow;
+      lien.style.color = 'inherit';
+      lien.style.fontWeight = '600';
+      suite.appendChild(lien);
+      box.appendChild(suite);
+
+      // Le bouton reste bloque : la redirection suit.
+      btn.textContent = d.openingForm;
+      setTimeout(function(){ window.location.href = cible; }, 2500);
+      return;
     } else {
       // Message renvoye par le workflow (deja dans la bonne langue) : "pas
       // encore trouve, reessayez", etc. Sinon repli reseau.
