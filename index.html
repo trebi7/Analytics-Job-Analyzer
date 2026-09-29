@@ -153,6 +153,13 @@
   .progress-steps .fait .dot{color:var(--green);}
   .progress-steps .fait{color:var(--ink);}
   .files-list{margin-top:16px;display:none;text-align:left;}
+  .apercu-inline{margin-top:18px;text-align:left;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--paper);}
+  .apercu-inline > div{max-width:100%;}
+  .apercu-inline img{max-width:100%;height:auto;}
+  @media (max-width:600px){
+    .apercu-inline > div{padding:16px 12px !important;}
+    .result-box:has(.apercu-inline:not([style*="none"])){padding:18px 10px;}
+  }
   .files-list.show{display:block;}
   .files-list a{display:flex;align-items:center;justify-content:space-between;gap:10px;
     padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;
@@ -267,21 +274,21 @@
           <span class="ptag" data-i18n="planUniteTag">POUR COMMENCER</span>
           <h3 data-i18n="planUniteTitle">À l'unité</h3>
           <p class="price" data-i18n="planUnitePrice">2 500 F CFA</p>
-          <p class="desc" data-i18n="planUniteDesc">Une analyse : rapport complet, lettre de motivation et plan pour renforcer votre CV.</p>
+          <p class="desc" data-i18n="planUniteDesc">Une offre analysée en détail : verdict, stratégie, lettre de motivation et lignes de votre CV à réécrire pour cette offre.</p>
           <a class="btn" href="achat.html?activer=unite" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
         <div class="plan-card best">
           <span class="ptag" data-i18n="planPack10Tag">Le plus pris</span>
           <h3 data-i18n="planPack10Title">Pack 10</h3>
           <p class="price" data-i18n="planPack10Price">7 500 F CFA</p>
-          <p class="desc" data-i18n="planPack10Desc">Dix analyses. De quoi trier sérieusement une semaine de candidatures.</p>
+          <p class="desc" data-i18n="planPack10Desc">Dix analyses, chacune avec son plan CV. D'une offre à l'autre, vous repérez les lacunes qui reviennent et votre CV gagne en précision.</p>
           <a class="btn" href="achat.html?activer=pack10" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
         <div class="plan-card">
           <span class="ptag" data-i18n="planPack30Tag">Recherche active</span>
           <h3 data-i18n="planPack30Title">Pack 30</h3>
           <p class="price" data-i18n="planPack30Price">15 000 F CFA</p>
-          <p class="desc" data-i18n="planPack30Desc">Trente analyses. Pour une recherche menée à plein temps.</p>
+          <p class="desc" data-i18n="planPack30Desc">Trente analyses pour une recherche à plein temps. Votre CV s'ajuste à chaque offre visée et vous savez quelles compétences travailler en priorité.</p>
           <a class="btn" href="achat.html?activer=pack30" data-i18n="planChooseBtn">Choisir cette formule</a>
         </div>
       </div>
@@ -385,7 +392,7 @@
           <div>
             <label for="ctx_sa_employer" data-i18n="saEmployer">Employeur (optionnel)</label>
             <p class="field-hint" data-i18n="saHint">Ces informations affinent l'évaluation de vos chances réelles et la fourchette de salaire à viser.</p>
-            <input type="text" id="ctx_sa_employer" maxlength="120" placeholder="ex. Jhpiego, Orange CI, PNUD">
+            <input type="text" id="ctx_sa_employer" maxlength="120" placeholder="ex. Orange CI, PNUD, Société Générale">
           </div>
           <div>
             <label for="ctx_sa_location" data-i18n="saLocation">Lieu et télétravail (optionnel)</label>
@@ -412,7 +419,7 @@
           <div>
             <label for="ctx_co_client" data-i18n="coClient">Commanditaire : ONG, bailleur, agence (optionnel)</label>
             <p class="field-hint" data-i18n="coHint">Ces informations servent à juger l'éligibilité, la charge réelle et le budget à proposer.</p>
-            <input type="text" id="ctx_co_client" maxlength="120" placeholder="ex. UNICEF, GIZ, Banque mondiale">
+            <input type="text" id="ctx_co_client" maxlength="120" placeholder="ex. UNICEF, AFD, Banque mondiale">
           </div>
           <div>
             <label for="ctx_co_duree" data-i18n="coDuree">Durée annoncée ou nombre de jours (optionnel)</label>
@@ -495,6 +502,7 @@
           </div>
 
           <div class="files-list" id="files-list"></div>
+          <div class="apercu-inline" id="apercu-inline" style="display:none;"></div>
         </div>
       </div>
     </section>
@@ -502,7 +510,7 @@
   </main>
 
 
-  <footer class="foot">Armand Davy TRE BI &nbsp;•&nbsp; Consultant Data Analyst &nbsp;•&nbsp; Eliam Digital Group &nbsp;•&nbsp; <a href="achat.html" style="color:var(--accent);">Créditer mon compte</a></footer>
+  <footer class="foot">Eliam Digital Group &nbsp;•&nbsp; <a href="mailto:armanddavy7@gmail.com" style="color:var(--accent);">armanddavy7@gmail.com</a> &nbsp;•&nbsp; <a href="achat.html" style="color:var(--accent);">Créditer mon compte</a></footer>
 </div>
 
 <script>
@@ -595,11 +603,11 @@ const translations = {
     startFreeBtn: "Obtenir mon aperçu gratuit →",
     plansIntro: "Après votre analyse offerte, rechargez votre compte. Les crédits n'expirent pas.",
     planUniteTag: "POUR COMMENCER", planUniteTitle: "À l'unité", planUnitePrice: "2 500 F CFA",
-    planUniteDesc: "Une analyse : rapport complet, lettre de motivation et plan pour renforcer votre CV.",
+    planUniteDesc: "Une offre analysée en détail : verdict, stratégie, lettre de motivation et lignes de votre CV à réécrire pour cette offre.",
     planPack10Tag: "Le plus pris", planPack10Title: "Pack 10", planPack10Price: "7 500 F CFA",
-    planPack10Desc: "Dix analyses. De quoi trier sérieusement une semaine de candidatures.",
+    planPack10Desc: "Dix analyses, chacune avec son plan CV. D'une offre à l'autre, vous repérez les lacunes qui reviennent et votre CV gagne en précision.",
     planPack30Tag: "Recherche active", planPack30Title: "Pack 30", planPack30Price: "15 000 F CFA",
-    planPack30Desc: "Trente analyses. Pour une recherche menée à plein temps.",
+    planPack30Desc: "Trente analyses pour une recherche à plein temps. Votre CV s'ajuste à chaque offre visée et vous savez quelles compétences travailler en priorité.",
     plansNote: "Paiement sur Chariow, par Mobile Money (Orange, MTN, Moov, Wave) ou carte. Utilisez la même adresse email partout.",
     planFreeLabel: "Aperçu gratuit (rapport complet avec un pack)",
     planChooseBtn: "Choisir cette formule",
@@ -669,11 +677,11 @@ const translations = {
     startFreeBtn: "Get my free preview →",
     plansIntro: "After your free analysis, top up your account. Credits never expire.",
     planUniteTag: "GET STARTED", planUniteTitle: "Single", planUnitePrice: "2,500 F CFA",
-    planUniteDesc: "One analysis: full report, cover letter and a plan to strengthen your CV.",
+    planUniteDesc: "One job analysed in depth: verdict, strategy, cover letter and the CV lines to rewrite for that job.",
     planPack10Tag: "Most chosen", planPack10Title: "Pack of 10", planPack10Price: "7,500 F CFA",
-    planPack10Desc: "Ten analyses. Enough to properly sort a week of applications.",
+    planPack10Desc: "Ten analyses, each with its own CV plan. From one job to the next, you spot the gaps that keep coming back and your CV gets sharper.",
     planPack30Tag: "Active search", planPack30Title: "Pack of 30", planPack30Price: "15,000 F CFA",
-    planPack30Desc: "Thirty analyses. For a full-time job search.",
+    planPack30Desc: "Thirty analyses for a full-time search. Your CV is tuned to every job you target, and you know which skills to work on first.",
     plansNote: "Payment on Chariow, by Mobile Money (Orange, MTN, Moov, Wave) or card. Use the same email address everywhere.",
     planFreeLabel: "Free preview (full report with a pack)",
     planChooseBtn: "Choose this plan",
@@ -823,6 +831,8 @@ const MAJ_LANCEMENT = {
     downloadAgainBtn: "Télécharger à nouveau →",
     retryAnalysis: "Relancer l'analyse",
     emailedNote: "Une copie du rapport vient aussi de partir vers votre adresse email.",
+    apercuPret: "Votre aperçu s'affiche ci-dessous.",
+    apercuEmail: "Il vous a aussi été envoyé par email.",
     lostRequest: "Votre demande n'a pas pu être retrouvée. Reprenez le formulaire depuis le début."
   },
   en: {
@@ -912,6 +922,8 @@ const MAJ_LANCEMENT = {
     downloadAgainBtn: "Download again →",
     retryAnalysis: "Run the analysis again",
     emailedNote: "A copy of the report has also been sent to your email address.",
+    apercuPret: "Your preview is shown below.",
+    apercuEmail: "It has also been sent to your email address.",
     lostRequest: "Your request could not be found. Please start the form again."
   }
 };
@@ -1044,7 +1056,7 @@ I build contract and activity trackers in Excel for decision-makers who are not 
 One question before scoping: roughly how many contracts will the workbook track, and do renewal windows follow a single rule or vary by contractor? That answer changes the structure significantly, and I would rather size it correctly than guess.
 
 Best regards,
-Armand Tre Bi`,
+[Your name]`,
     hNotes: "Notes d'usage", notes: [
       "La première ligne reprend une contrainte précise de l'annonce : c'est ce qui distingue la proposition des candidatures génériques, indispensable quand trois entretiens sont déjà en cours.",
       "La question finale sert double : elle montre l'expérience et fournit l'information nécessaire pour verrouiller le périmètre avant d'accepter le prix fixe."
@@ -1059,7 +1071,7 @@ Armand Tre Bi`,
       { prio: "Priorité haute", sec: "Profil Upwork : titre", avant: "Data Analyst | Power BI | Excel | Python",
         apres: "Tableaux de bord Excel et Power BI pour le suivi d'activité, en formules natives et sans macros",
         why: "Le client exige « native Excel formulas only ». Le titre actuel met Python en avant, ce qui ne sert pas cette offre." },
-      { prio: "Priorité haute", sec: "Expérience : Jhpiego, projet RISE", avant: "Développement de tableaux de bord de suivi des indicateurs",
+      { prio: "Priorité haute", sec: "Expérience : ONG internationale, programme de santé", avant: "Développement de tableaux de bord de suivi des indicateurs",
         apres: "Conçu [X] tableaux de suivi (statuts, échéances, alertes de retard) consultés chaque mois par [X] responsables non techniques",
         why: "L'offre parle de « key dates » et d'« overdue actions ». Votre expérience couvre ce besoin, mais la ligne ne le dit pas." }
     ],
@@ -1142,7 +1154,7 @@ I build contract and activity trackers in Excel for decision-makers who are not 
 One question before scoping: roughly how many contracts will the workbook track, and do renewal windows follow a single rule or vary by contractor? That answer changes the structure significantly, and I would rather size it correctly than guess.
 
 Best regards,
-Armand Tre Bi`,
+[Your name]`,
     hNotes: "Usage notes", notes: [
       "The opening line picks up a precise constraint from the posting: that is what separates this from generic proposals, which matters when three interviews are already running.",
       "The closing question does double duty: it signals experience and gathers what is needed to lock the scope before accepting a fixed price."
@@ -1157,7 +1169,7 @@ Armand Tre Bi`,
       { prio: "High priority", sec: "Upwork profile: headline", avant: "Data Analyst | Power BI | Excel | Python",
         apres: "Excel and Power BI dashboards for activity tracking, built with native formulas and no macros",
         why: "The client requires \"native Excel formulas only\". The current headline leads with Python, which does not help here." },
-      { prio: "High priority", sec: "Experience: Jhpiego, RISE project", avant: "Built dashboards to track indicators",
+      { prio: "High priority", sec: "Experience: international NGO, health programme", avant: "Built dashboards to track indicators",
         apres: "Built [X] tracking dashboards (status, deadlines, overdue alerts) used monthly by [X] non-technical managers",
         why: "The posting mentions \"key dates\" and \"overdue actions\". Your experience covers that need, but the line does not say so." }
     ],
@@ -1335,6 +1347,19 @@ function triggerDownloads(onDone) {
       setTimeout(suivant, 800);
     })();
   });
+}
+
+// Rendu de l'apercu dans la page. Le HTML vient de notre serveur, qui echappe
+// deja tout texte issu du modele ; DOMParser et innerHTML n'executent aucun
+// script. On ne garde que le contenu du <body>.
+function afficherApercu(html) {
+  const zone = document.getElementById('apercu-inline');
+  if (!zone) return;
+  let corps = '';
+  try { corps = new DOMParser().parseFromString(html, 'text/html').body.innerHTML; } catch (e) { corps = ''; }
+  zone.innerHTML = corps;
+  zone.style.display = corps ? '' : 'none';
+  if (corps && zone.scrollIntoView) zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Liste cliquable : si le navigateur bloque un telechargement automatique,
@@ -1783,6 +1808,9 @@ function afficherListeFichiers(prets) {
     waitingNote.className = 'result-note show pending';
     waitingNote.textContent = t().prgLong;
     document.getElementById('reveal-payment-btn').style.display = 'none';
+    const zoneApercu = document.getElementById('apercu-inline');
+    if (zoneApercu) { zoneApercu.style.display = 'none'; zoneApercu.innerHTML = ''; }
+    document.getElementById('result-meta').style.display = '';
     prgDemarrer();
 
     let res;
@@ -1851,6 +1879,20 @@ function afficherListeFichiers(prets) {
       document.getElementById('tc-motif').textContent = '';
       document.getElementById('tc-warn').style.display = 'none';
       document.querySelector('#type-confirm .tc-title').textContent = t().scamTitle;
+    }
+
+    // Apercu gratuit : il s'affiche directement dans la page. Telecharge
+    // puis ouvert depuis un telephone (apercu de fichiers iOS, visionneuse
+    // HTML Android), son bouton « Voir les packs » ne repondait pas : ces
+    // visionneuses bloquent les liens. Dans la page, le lien marche partout.
+    if (data.apercu === true) {
+      afficherApercu(data.report_html);
+      prgTerminer();
+      document.getElementById('result-meta').style.display = 'none';
+      try { localStorage.removeItem(LS_PENDING_REQUEST); } catch (e) {}
+      waitingNote.className = 'result-note show ok';
+      waitingNote.textContent = t().apercuPret + ' ' + t().apercuEmail;
+      return;
     }
 
     triggerDownloads(function (ok) {
