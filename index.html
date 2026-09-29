@@ -125,6 +125,10 @@
   .btn-ghost-fallback{background:transparent;color:var(--muted);font-size:12.5px;font-weight:500;padding:6px 4px;
     text-decoration:underline;border:none;cursor:pointer;font-family:inherit;}
   .btn-ghost-fallback:hover{color:var(--navy);}
+  .btn-secondary{background:#fff;color:var(--navy);border:1px solid #CBD8E6;}
+  .btn-secondary:hover{border-color:var(--navy);}
+  .refus-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px;}
+  .refus-actions .btn{margin:0;}
 
   .result-note{border-radius:10px;padding:14px 16px;font-size:13.8px;line-height:1.55;margin-top:18px;display:none;}
   .result-note.show{display:block;}
@@ -264,7 +268,7 @@
     <section id="step-plans">
       <span class="eyebrow" data-i18n="eyebrow">● Actuellement réservé aux postes dans le domaine de la Data !</span>
       <h1 data-i18n="h1">On analyse l'offre avant que tu ne postules.</h1>
-      <p class="sub" data-i18n="sub">Mission freelance, poste salarié ou appel à consultance : dépose ton CV et l'offre d'emploi (fichier ou texte de l'offre), tu reçois l'analyse complète en moins de deux minutes.</p>
+      <p class="sub" data-i18n="sub">Mission freelance, poste salarié ou appel à consultance : dépose ton CV et l'offre d'emploi (fichier ou texte de l'offre), tu reçois ton verdict en moins de deux minutes, et le rapport complet avec un pack.</p>
       <div class="launch-note" data-i18n="launchNote"><b>Phase de lancement :</b> Un aperçu gratuit de votre analyse vous est offert. Entrez une adresse email valide pour le recevoir. Le rapport complet s'obtient avec un pack.</div>
 
             <button type="button" class="start-btn" data-plan="gratuit" data-i18n="startFreeBtn">Obtenir mon aperçu gratuit →</button>
@@ -477,7 +481,10 @@
       <div class="result-box">
         <p class="file-title" id="result-title"></p>
         <p class="file-meta" id="result-meta" data-i18n="resultMeta">Format : HTML, dans la langue de cette page</p>
-        <button type="button" class="btn btn-primary" id="reveal-payment-btn" style="display:none;" data-i18n="downloadAgainBtn">Télécharger à nouveau →</button>
+        <div class="refus-actions" id="result-actions">
+          <button type="button" class="btn btn-primary" id="reveal-payment-btn" style="display:none;" data-i18n="downloadAgainBtn">Télécharger à nouveau →</button>
+          <button type="button" class="btn btn-secondary" id="close-btn" style="display:none;" data-i18n="closeBtn">Fermer</button>
+        </div>
 
         <div class="type-confirm" id="type-confirm" style="display:none;">
           <p class="tc-title" data-i18n="tcTitle">Offre identifiée</p>
@@ -749,7 +756,7 @@ let currentLang = 'en';
 const MAJ_LANCEMENT = {
   fr: {
     step3: "03 — Analyse et résultat",
-    sub: "Mission freelance, poste salarié ou appel à consultance : dépose ton CV et l'offre d'emploi (fichier ou texte de l'offre), tu reçois l'analyse complète en moins de deux minutes.",
+    sub: "Mission freelance, poste salarié ou appel à consultance : dépose ton CV et l'offre d'emploi (fichier ou texte de l'offre), tu reçois ton verdict en moins de deux minutes, et le rapport complet avec un pack.",
     launchNote: "<b>Phase de lancement :</b> Un aperçu gratuit de votre analyse vous est offert. Entrez une adresse email valide pour le recevoir. Le rapport complet s'obtient avec un pack.",
     startFreeBtn: "Obtenir mon aperçu gratuit →",
     emailWarn: "Votre rapport vous est aussi envoyé à cette adresse : vous ne le perdez pas si vous fermez l'onglet.",
@@ -833,6 +840,9 @@ const MAJ_LANCEMENT = {
     readyMeta: "Livré en HTML, dans la langue de cette page",
     downloadAgainBtn: "Télécharger à nouveau →",
     retryAnalysis: "Relancer l'analyse",
+    buyPacksBtn: "Acheter de nouveaux packs →",
+    refusTitle: "Analyse non lancée",
+    closeBtn: "Fermer",
     emailedNote: "Une copie du rapport vient aussi de partir vers votre adresse email.",
     apercuPret: "Votre aperçu s'affiche ci-dessous.",
     apercuEmail: "Il vous a aussi été envoyé par email.",
@@ -840,7 +850,7 @@ const MAJ_LANCEMENT = {
   },
   en: {
     step3: "03 — Analysis and result",
-    sub: "Freelance gig, salaried role or consultancy call: drop your CV and the job offer (file or text), you get the full analysis in under two minutes.",
+    sub: "Freelance gig, salaried role or consultancy call: drop your CV and the job offer (file or text), you get your verdict in under two minutes, and the full report with a pack.",
     launchNote: "<b>Launch phase:</b> A free preview of your analysis is offered. Enter a valid email address to receive it. The full report comes with a pack.",
     startFreeBtn: "Get my free preview →",
     emailWarn: "Your report is also sent to this address, so you keep it even if you close the tab.",
@@ -924,6 +934,9 @@ const MAJ_LANCEMENT = {
     readyMeta: "Delivered as HTML, in this page's language",
     downloadAgainBtn: "Download again →",
     retryAnalysis: "Run the analysis again",
+    buyPacksBtn: "Buy new packs →",
+    refusTitle: "Analysis not started",
+    closeBtn: "Close",
     emailedNote: "A copy of the report has also been sent to your email address.",
     apercuPret: "Your preview is shown below.",
     apercuEmail: "It has also been sent to your email address.",
@@ -1862,6 +1875,7 @@ function afficherListeFichiers(prets) {
     waitingNote.className = 'result-note show pending';
     waitingNote.textContent = t().prgLong;
     document.getElementById('reveal-payment-btn').style.display = 'none';
+    document.getElementById('close-btn').style.display = 'none';
     const zoneApercu = document.getElementById('apercu-inline');
     if (zoneApercu) { zoneApercu.style.display = 'none'; zoneApercu.innerHTML = ''; }
     document.getElementById('result-meta').style.display = '';
@@ -1887,7 +1901,11 @@ function afficherListeFichiers(prets) {
       prgArreter();
       waitingNote.className = 'result-note show err';
       waitingNote.textContent = data.message || t().statusServerErr;
-      afficherBoutonReessayer();
+      // Refus de droit (analyse offerte deja utilisee, credits epuises) :
+      // relancer ne changerait rien, on propose donc d'acheter un pack.
+      // Les pannes techniques gardent le bouton de relance.
+      if (CODES_REFUS_ACHAT.indexOf(data.code) !== -1) afficherBoutonsAchat();
+      else afficherBoutonReessayer();
       return;
     }
 
@@ -1968,9 +1986,53 @@ function afficherListeFichiers(prets) {
     const btn = ancien.cloneNode(true);
     ancien.parentNode.replaceChild(btn, ancien);
     btn.style.display = '';
+    btn.setAttribute('data-i18n', 'retryAnalysis');
     btn.textContent = t().retryAnalysis;
     btn.addEventListener('click', function () { lancerAnalyse(); });
   }
+
+  // Codes renvoyes par le serveur quand l'adresse n'a plus de droit.
+  const CODES_REFUS_ACHAT = ['quota_email', 'quota_appareil', 'credits_epuises'];
+
+  function afficherBoutonsAchat() {
+    const ancien = document.getElementById('reveal-payment-btn');
+    const btn = ancien.cloneNode(true);
+    ancien.parentNode.replaceChild(btn, ancien);
+    btn.style.display = '';
+    btn.setAttribute('data-i18n', 'buyPacksBtn');
+    btn.textContent = t().buyPacksBtn;
+    btn.addEventListener('click', function () {
+      // L'adresse suit jusqu'a la page d'achat : les credits doivent etre
+      // rattaches a celle qui vient d'etre refusee.
+      try {
+        sessionStorage.setItem('achat_prefill', JSON.stringify({
+          email: pendingRequest ? pendingRequest.contact_email : '',
+          t: Date.now()
+        }));
+      } catch (e) {}
+      window.location.href = 'achat.html?lang=' + currentLang;
+    });
+
+    const fermer = document.getElementById('close-btn');
+    fermer.style.display = '';
+
+    // Le titre disait encore « Analyse en cours » : on le corrige, et on
+    // retire la mention du format de livraison, sans objet ici.
+    document.getElementById('result-title').textContent =
+      t().refusTitle + (pendingRequest && pendingRequest.job_title ? ' — ' + pendingRequest.job_title : '');
+    document.getElementById('result-meta').style.display = 'none';
+  }
+
+  // Fermer : les navigateurs n'autorisent window.close() que sur une fenetre
+  // ouverte par un script. Si la fenetre reste ouverte, on revient a
+  // l'accueil du formulaire, remis a zero.
+  document.getElementById('close-btn').addEventListener('click', function () {
+    try { localStorage.removeItem(LS_PENDING_REQUEST); } catch (e) {}
+    try { window.close(); } catch (e) {}
+    setTimeout(function () {
+      if (!window.closed) window.location.href = window.location.pathname;
+    }, 300);
+  });
 
 
   /* ==================================================================

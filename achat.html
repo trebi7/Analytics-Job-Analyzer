@@ -402,6 +402,20 @@ document.getElementById('email').addEventListener('input', effacerErreur);
 // La langue du navigateur decide, avec le francais par defaut : la page
 // s'adresse d'abord au marche ouest-africain francophone.
 if (/^en/i.test(navigator.language || '')) lang = 'en';
+// Venant du formulaire d'analyse (?lang=fr|en), on garde la langue choisie.
+const mLang = (window.location.search || '').match(/[?&]lang=(fr|en)(&|$)/);
+if (mLang) lang = mLang[1];
+
+// Venant d'un refus d'analyse : l'adresse refusee est reprise, pour que les
+// credits achetes lui soient bien rattaches.
+(function(){
+  let info = null;
+  try { info = JSON.parse(sessionStorage.getItem('achat_prefill') || 'null'); } catch (e) { info = null; }
+  try { sessionStorage.removeItem('achat_prefill'); } catch (e) {}
+  if (!info || !info.t || Date.now() - info.t > 30 * 60 * 1000) return;
+  const champ = document.getElementById('email');
+  if (champ && typeof info.email === 'string' && !champ.value) champ.value = info.email.slice(0, 200);
+})();
 
 // Retour depuis Chariow (lien du message de livraison : ?activer=unite|pack10|pack30).
 // On presente le pack et on invite a activer. Le pack reel credite reste
